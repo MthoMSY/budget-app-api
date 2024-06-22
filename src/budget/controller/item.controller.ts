@@ -11,7 +11,7 @@ export class ItemController {
   }
 
   @Post()
-  async createItem(@Body() request: ItemModel) {
-    await this.itemService.create(request);
+  async createItem(@Body() request: ItemModel): Promise<ItemModel> {
+    return await this.itemService.create(request);
   }
 }

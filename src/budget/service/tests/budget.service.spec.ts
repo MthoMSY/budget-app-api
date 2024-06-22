@@ -26,7 +26,7 @@ describe('BudgetService', () => {
   describe('create', () => {
     it('should return budgets that have been created', async () => {
       for (let index = 0; index < 3; index++) {
-        await service.create(`Budget_${index + 1}`, []);
+        await service.create({ name: `Budget_${index + 1}`, items: [] });
       }
       const result = await service.getAll();
 

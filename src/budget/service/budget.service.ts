@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { CreateBudgetDto } from '../dto/create-budget.dto';
 
 @Injectable()
 export class BudgetService {
@@ -8,11 +9,10 @@ export class BudgetService {
     return this.budgets;
   }
 
-  async create(name: string, items: ItemModel[]): Promise<BudgetModel> {
+  async create(request: CreateBudgetDto): Promise<BudgetModel> {
     const budget: BudgetModel = {
       id: this.budgets.length + 1,
-      name,
-      items,
+      ...request,
     };
     this.budgets.push(budget);
 
