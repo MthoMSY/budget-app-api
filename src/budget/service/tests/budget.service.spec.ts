@@ -31,7 +31,9 @@ describe('BudgetService', () => {
       const result = await service.getAll();
 
       expect(result.length).toStrictEqual(3);
-      expect(result[0]).toStrictEqual({ id: 1, name: 'Budget_1', items: [] });
+      expect(result[0]).toEqual(
+        expect.objectContaining({ id: 1, name: 'Budget_1', items: [] }),
+      );
     });
   });
 });

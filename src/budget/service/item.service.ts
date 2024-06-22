@@ -12,6 +12,8 @@ export class ItemService {
   async create(request: CreateItemDto): Promise<ItemModel> {
     const item = {
       ...request,
+      createdAt: new Date(),
+      updatedAt: undefined,
     };
 
     this.items.push(item);

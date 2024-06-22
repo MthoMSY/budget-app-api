@@ -13,6 +13,8 @@ export class BudgetService {
     const budget: BudgetModel = {
       id: this.budgets.length + 1,
       ...request,
+      createdAt: new Date(),
+      updatedAt: undefined
     };
     this.budgets.push(budget);
 

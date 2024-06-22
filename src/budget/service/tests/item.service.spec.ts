@@ -36,11 +36,13 @@ describe('ItemService', () => {
       const result = await service.getAll();
 
       expect(result.length).toStrictEqual(3);
-      expect(result[0]).toStrictEqual({
-        cost: 0.5,
-        name: 'Item_1',
-        description: 'description',
-      });
+      expect(result[0]).toEqual(
+        expect.objectContaining({
+          cost: 0.5,
+          name: 'Item_1',
+          description: 'description',
+        }),
+      );
     });
   });
 });
