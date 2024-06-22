@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BudgetService } from '../budget.service';
+import exp from 'constants';
 
 describe('BudgetService', () => {
   let service: BudgetService;
@@ -22,8 +23,7 @@ describe('BudgetService', () => {
 
       expect(result).toStrictEqual([]);
     });
-  });
-  describe('create', () => {
+
     it('should return budgets that have been created', async () => {
       for (let index = 0; index < 3; index++) {
         await service.create({ name: `Budget_${index + 1}`, items: [] });
@@ -31,9 +31,18 @@ describe('BudgetService', () => {
       const result = await service.getAll();
 
       expect(result.length).toStrictEqual(3);
-      expect(result[0]).toEqual(
-        expect.objectContaining({ id: 1, name: 'Budget_1', items: [] }),
-      );
+    });
+  });
+  describe('create', () => {
+    it('should create budget', async () => {
+      const request = {
+        name: `Budget`,
+        items: [],
+      };
+      const result = await service.create(request);
+
+      expect(result).toBeDefined();
+      expect(result).toEqual(expect.objectContaining({ ...request }));
     });
   });
 });

@@ -22,13 +22,10 @@ describe('ItemService', () => {
 
       expect(result).toStrictEqual([]);
     });
-  });
-
-  describe('create', () => {
     it('should return budgets that have been created', async () => {
       for (let index = 0; index < 3; index++) {
         await service.create({
-          cost: 0.5,
+          cost: index + 0.5,
           name: `Item_${index + 1}`,
           description: `description`,
         });
@@ -36,13 +33,20 @@ describe('ItemService', () => {
       const result = await service.getAll();
 
       expect(result.length).toStrictEqual(3);
-      expect(result[0]).toEqual(
-        expect.objectContaining({
-          cost: 0.5,
-          name: 'Item_1',
-          description: 'description',
-        }),
-      );
+    });
+  });
+
+  describe('create', () => {
+    it('should create budget', async () => {
+      const request = {
+        cost: 0.5,
+        name: `Item`,
+        description: `description`,
+      };
+      const result = await service.create(request);
+
+      expect(result).toBeDefined();
+      expect(result).toEqual(expect.objectContaining({ ...request }));
     });
   });
 });

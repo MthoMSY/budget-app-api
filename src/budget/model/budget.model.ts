@@ -1,6 +1,6 @@
 interface BudgetModel {
   name: string;
-  id: number;
+  id: string;
   items: ItemModel[];
   createdAt: Date;
   updatedAt: Date | undefined;
