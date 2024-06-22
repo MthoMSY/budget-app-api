@@ -8,7 +8,7 @@ export class BudgetService {
     return this.budgets;
   }
 
-  async createBudget(budget: BudgetModel): Promise<void> {
-    this.budgets.push(budget);
+  async createBudget(name: string, items: ItemModel[]): Promise<void> {
+    this.budgets.push({ id: this.budgets.length + 1, name, items });
   }
 }
