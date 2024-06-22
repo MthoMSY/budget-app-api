@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { BudgetService } from '../service/budget.service';
 import { CreateBudgetDto } from '../dto/create-budget.dto';
 
@@ -9,6 +9,11 @@ export class BudgetController {
   @Get()
   async getAllBudgets() {
     return await this.budgetService.getAll();
+  }
+
+  @Get('/:id')
+  async getByBudgetId(@Query('id') id: string): Promise<BudgetModel | null> {
+    return await this.budgetService.getById(id);
   }
 
   @Post()

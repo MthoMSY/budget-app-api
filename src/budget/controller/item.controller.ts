@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ItemService } from '../service/item.service';
 
 @Controller('item')
@@ -8,6 +8,11 @@ export class ItemController {
   @Get()
   async getAllItems(): Promise<ItemModel[]> {
     return await this.itemService.getAll();
+  }
+
+  @Get()
+  async getByItemId(@Query('id') id: string): Promise<ItemModel[]> {
+    return await this.itemService.getById(id);
   }
 
   @Post()
