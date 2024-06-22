@@ -45,4 +45,8 @@ describe('BudgetService', () => {
       expect(result).toEqual(expect.objectContaining({ ...request }));
     });
   });
+  describe('getById', () => {
+    it.todo('should return null if no budget exists with id');
+    it.todo('should return budget');
+  });
 });

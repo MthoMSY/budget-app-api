@@ -17,12 +17,12 @@ describe('ItemService', () => {
   });
 
   describe('getAll', () => {
-    it('should return empty array when there are no budgets', async () => {
+    it('should return empty array when there are no items', async () => {
       const result = await service.getAll();
 
       expect(result).toStrictEqual([]);
     });
-    it('should return budgets that have been created', async () => {
+    it('should return items that have been created', async () => {
       for (let index = 0; index < 3; index++) {
         await service.create({
           cost: index + 0.5,
@@ -37,7 +37,7 @@ describe('ItemService', () => {
   });
 
   describe('create', () => {
-    it('should create budget', async () => {
+    it('should create item', async () => {
       const request = {
         cost: 0.5,
         name: `Item`,
@@ -48,5 +48,10 @@ describe('ItemService', () => {
       expect(result).toBeDefined();
       expect(result).toEqual(expect.objectContaining({ ...request }));
     });
+  });
+
+  describe('getById', () => {
+    it.todo('should return null if no item exists with id');
+    it.todo('should return item');
   });
 });
