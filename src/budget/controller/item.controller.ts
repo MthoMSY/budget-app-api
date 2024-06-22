@@ -7,11 +7,11 @@ export class ItemController {
 
   @Get()
   async getAllItems(): Promise<ItemModel[]> {
-    return await this.itemService.getAllItems();
+    return await this.itemService.getAll();
   }
 
   @Post()
   async createItem(@Body() request: ItemModel) {
-    await this.itemService.createItem(request);
+    await this.itemService.create(request);
   }
 }

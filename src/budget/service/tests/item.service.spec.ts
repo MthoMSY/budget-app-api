@@ -16,24 +16,24 @@ describe('ItemService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('getAllItems', () => {
+  describe('getAll', () => {
     it('should return empty array when there are no budgets', async () => {
-      const result = await service.getAllItems();
+      const result = await service.getAll();
 
       expect(result).toStrictEqual([]);
     });
   });
 
-  describe('createItem', () => {
+  describe('create', () => {
     it('should return budgets that have been created', async () => {
       for (let index = 0; index < 3; index++) {
-        await service.createItem({
+        await service.create({
           cost: 0.5,
           name: `Item_${index + 1}`,
           description: `description`,
         });
       }
-      const result = await service.getAllItems();
+      const result = await service.getAll();
 
       expect(result.length).toStrictEqual(3);
       expect(result[0]).toStrictEqual({

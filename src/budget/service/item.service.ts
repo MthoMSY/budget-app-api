@@ -4,11 +4,12 @@ import { Injectable } from '@nestjs/common';
 export class ItemService {
   private items: ItemModel[] = [];
 
-  async getAllItems(): Promise<ItemModel[]> {
+  async getAll(): Promise<ItemModel[]> {
     return this.items;
   }
 
-  async createItem(item: ItemModel): Promise<void> {
+  async create(item: ItemModel): Promise<ItemModel> {
     this.items.push(item);
+    return item;
   }
 }

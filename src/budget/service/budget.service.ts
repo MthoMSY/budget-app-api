@@ -4,11 +4,18 @@ import { Injectable } from '@nestjs/common';
 export class BudgetService {
   private budgets: BudgetModel[] = [];
 
-  async getAllBudgets(): Promise<BudgetModel[]> {
+  async getAll(): Promise<BudgetModel[]> {
     return this.budgets;
   }
 
-  async createBudget(name: string, items: ItemModel[]): Promise<void> {
-    this.budgets.push({ id: this.budgets.length + 1, name, items });
+  async create(name: string, items: ItemModel[]): Promise<BudgetModel> {
+    const budget: BudgetModel = {
+      id: this.budgets.length + 1,
+      name,
+      items,
+    };
+    this.budgets.push(budget);
+
+    return budget;
   }
 }

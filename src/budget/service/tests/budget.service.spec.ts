@@ -16,18 +16,19 @@ describe('BudgetService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('getAllBudgets', () => {
+  describe('getAll', () => {
     it('should return empty array when there are no budgets', async () => {
-      const result = await service.getAllBudgets();
+      const result = await service.getAll();
 
       expect(result).toStrictEqual([]);
     });
-
+  });
+  describe('create', () => {
     it('should return budgets that have been created', async () => {
       for (let index = 0; index < 3; index++) {
-        await service.createBudget(`Budget_${index + 1}`, []);
+        await service.create(`Budget_${index + 1}`, []);
       }
-      const result = await service.getAllBudgets();
+      const result = await service.getAll();
 
       expect(result.length).toStrictEqual(3);
       expect(result[0]).toStrictEqual({ id: 1, name: 'Budget_1', items: [] });

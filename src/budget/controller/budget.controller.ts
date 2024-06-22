@@ -7,6 +7,6 @@ export class BudgetController {
 
   @Get()
   async getAllBudgets() {
-    return await this.budgetService.getAllBudgets();
+    return await this.budgetService.getAll();
   }
 }
