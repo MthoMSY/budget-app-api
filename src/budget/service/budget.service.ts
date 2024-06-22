@@ -7,4 +7,8 @@ export class BudgetService {
   async getAllBudgets(): Promise<BudgetModel[]> {
     return this.budgets;
   }
+
+  async createBudget(budget: BudgetModel): Promise<void> {
+    this.budgets.push(budget);
+  }
 }
