@@ -10,6 +10,16 @@ export class BudgetService {
     return this.budgets;
   }
 
+  async getById(id: string): Promise<BudgetModel | null> {
+    const result = this.budgets.find((budget) => budget.id === id);
+
+    if (!result) {
+      return null;
+    }
+
+    return result;
+  }
+
   async create(request: CreateBudgetDto): Promise<BudgetModel> {
     const budget: BudgetModel = {
       id: v4(),

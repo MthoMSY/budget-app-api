@@ -10,6 +10,14 @@ export class ItemService {
     return this.items;
   }
 
+  async getById(id: string): Promise<ItemModel | null> {
+    const result = this.items.find((item) => item.id === id);
+    if (!result) {
+      return null;
+    }
+    return result;
+  }
+
   async create(request: CreateItemDto): Promise<ItemModel> {
     const item = {
       id: v4(),

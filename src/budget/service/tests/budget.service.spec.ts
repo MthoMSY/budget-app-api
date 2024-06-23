@@ -46,7 +46,20 @@ describe('BudgetService', () => {
     });
   });
   describe('getById', () => {
-    it.todo('should return null if no budget exists with id');
-    it.todo('should return budget');
+    it('should return null if no budget exists with id', async () => {
+      const result = await service.getById('non-existent-id');
+
+      expect(result).toEqual(null);
+    });
+    it('should return budget', async () => {
+      const item = await service.create({
+        name: 'Test',
+        items: [],
+      });
+
+      const result = await service.getById(item.id);
+
+      expect(result).toEqual(item);
+    });
   });
 });

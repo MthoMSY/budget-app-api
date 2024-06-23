@@ -51,7 +51,21 @@ describe('ItemService', () => {
   });
 
   describe('getById', () => {
-    it.todo('should return null if no item exists with id');
-    it.todo('should return item');
+    it('should return null if no item exists with id', async () => {
+      const result = await service.getById('non-existent-id');
+
+      expect(result).toEqual(null);
+    });
+    it('should return item', async () => {
+      const item = await service.create({
+        name: 'Test',
+        description: 'description',
+        cost: 350,
+      });
+
+      const result = await service.getById(item.id);
+
+      expect(result).toEqual(item);
+    });
   });
 });
