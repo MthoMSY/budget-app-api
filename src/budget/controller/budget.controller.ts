@@ -21,7 +21,7 @@ export class BudgetController {
     return await this.budgetService.create(request);
   }
 
-  @Delete()
+  @Delete('/:id')
   async deleteItem(@Query('id') id: string): Promise<BudgetModel | null> {
     return await this.budgetService.delete(id);
   }

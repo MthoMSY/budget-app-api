@@ -20,7 +20,7 @@ export class ItemController {
     return await this.itemService.create(request);
   }
 
-  @Delete()
+  @Delete('/:id')
   async deleteItem(@Query('id') id: string): Promise<ItemModel | null> {
     return await this.itemService.delete(id);
   }
