@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query, Delete } from '@nestjs/common';
+import { Body, Controller, Get, Post, Delete, Param } from '@nestjs/common';
 import { BudgetService } from '../service/budget.service';
 import { CreateBudgetDto } from '../dto/create-budget.dto';
 
@@ -12,7 +12,7 @@ export class BudgetController {
   }
 
   @Get('/:id')
-  async getByBudgetId(@Query('id') id: string): Promise<BudgetModel | null> {
+  async getByBudgetId(@Param('id') id: string): Promise<BudgetModel | null> {
     return await this.budgetService.getById(id);
   }
 
@@ -22,7 +22,7 @@ export class BudgetController {
   }
 
   @Delete('/:id')
-  async deleteItem(@Query('id') id: string): Promise<BudgetModel | null> {
+  async deleteItem(@Param('id') id: string): Promise<BudgetModel | null> {
     return await this.budgetService.delete(id);
   }
 }

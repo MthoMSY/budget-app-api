@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Param } from '@nestjs/common';
 import { ItemService } from '../service/item.service';
 
 @Controller('item')
@@ -10,8 +10,8 @@ export class ItemController {
     return await this.itemService.getAll();
   }
 
-  @Get()
-  async getByItemId(@Query('id') id: string): Promise<ItemModel | null> {
+  @Get('/:id')
+  async getByItemId(@Param('id') id: string): Promise<ItemModel | null> {
     return await this.itemService.getById(id);
   }
 
@@ -21,7 +21,7 @@ export class ItemController {
   }
 
   @Delete('/:id')
-  async deleteItem(@Query('id') id: string): Promise<ItemModel | null> {
+  async deleteItem(@Param('id') id: string): Promise<ItemModel | null> {
     return await this.itemService.delete(id);
   }
 }
