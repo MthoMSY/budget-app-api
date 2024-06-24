@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBudgetDto } from '../dto/create-budget.dto';
 import { v4 } from 'uuid';
 
@@ -30,5 +30,16 @@ export class BudgetService {
     this.budgets.push(budget);
 
     return budget;
+  }
+
+  async delete(id: string): Promise<BudgetModel> {
+    const budget = await this.getById(id);
+
+    if (budget) {
+      this.budgets = this.budgets.filter((budget) => budget.id !== id);
+      return budget;
+    }
+
+    throw new NotFoundException(`Budget with id: ${id} was not found`);
   }
 }

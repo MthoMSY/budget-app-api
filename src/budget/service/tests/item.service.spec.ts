@@ -68,4 +68,26 @@ describe('ItemService', () => {
       expect(result).toEqual(item);
     });
   });
+
+  describe('delete', () => {
+    it('should throw not found exception when item with given id does not exist', async () => {
+      await expect(service.delete('non-existent')).rejects.toThrow();
+    });
+    it('should return deleted item after deletion', async () => {
+      const request = {
+        cost: 0.5,
+        name: `Item`,
+        description: `description`,
+      };
+      const createdItem = await service.create(request);
+
+      const deletedItem = await service.delete(createdItem.id);
+
+      expect(deletedItem).toEqual(createdItem);
+
+      const result = await service.getById(deletedItem.id);
+
+      expect(result).toBe(null);
+    });
+  });
 });

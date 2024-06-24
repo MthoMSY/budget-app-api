@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BudgetService } from '../budget.service';
-import exp from 'constants';
 
 describe('BudgetService', () => {
   let service: BudgetService;
@@ -60,6 +59,27 @@ describe('BudgetService', () => {
       const result = await service.getById(item.id);
 
       expect(result).toEqual(item);
+    });
+  });
+
+  describe('delete', () => {
+    it('should throw not found exception when budget with given id does not exist', async () => {
+      await expect(service.delete('non-existent')).rejects.toThrow();
+    });
+    it('should return deleted budget after deletion', async () => {
+      const request = {
+        name: `budget`,
+        items: [],
+      };
+      const createdItem = await service.create(request);
+
+      const deletedItem = await service.delete(createdItem.id);
+
+      expect(deletedItem).toEqual(createdItem);
+
+      const result = await service.getById(deletedItem.id);
+
+      expect(result).toBe(null);
     });
   });
 });
