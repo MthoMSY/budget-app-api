@@ -90,4 +90,21 @@ describe('ItemService', () => {
       expect(result).toBe(null);
     });
   });
+
+  describe('update name', () => {
+    it('should update name of existing item', async () => {
+      const request = {
+        cost: 0.5,
+        name: `Item`,
+        description: `description`,
+      };
+      const updateName = 'ItemUpdate';
+
+      const item = await service.create(request);
+      service.updateName(item.id, updateName);
+      const result = await service.getById(item.id);
+
+      expect(result.name).toEqual(updateName);
+    });
+  });
 });

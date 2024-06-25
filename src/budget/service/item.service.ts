@@ -41,4 +41,13 @@ export class ItemService {
 
     throw new NotFoundException(`Item with id: ${id} was not found`);
   }
+
+  async updateName(id: string, name: string): Promise<void> {
+    const item = await this.getById(id);
+    if (item) {
+      item.name = name;
+      await this.delete(id);
+      this.items.push(item);
+    }
+  }
 }
