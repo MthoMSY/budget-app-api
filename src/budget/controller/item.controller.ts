@@ -21,7 +21,7 @@ export class ItemController {
 
   @Get()
   async getFilterItems(
-    @Query() filterDto: GetItemFilterDto,
+    @Query(ValidationPipe) filterDto: GetItemFilterDto,
   ): Promise<ItemModel[]> {
     if (Object.keys(filterDto).length) {
       return await this.itemService.getItemsWithFilters(filterDto);
