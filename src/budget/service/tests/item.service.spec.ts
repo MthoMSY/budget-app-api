@@ -107,4 +107,47 @@ describe('ItemService', () => {
       expect(result.name).toEqual(updateName);
     });
   });
+
+  describe('getItemsWithFilters', () => {
+    let filterDto = {};
+    beforeEach(async () => {
+      for (let index = 0; index < 5; index++) {
+        await service.create({
+          cost: index * 0.5,
+          name: `Item_0${index}`,
+          description: `description_0${index}`,
+        });
+      }
+    });
+
+    it('should filter by name', async () => {
+      const expectedItemName = 'Item_02';
+      filterDto = { name: expectedItemName };
+
+      const result = await service.getItemsWithFilters(filterDto);
+
+      expect(result.length).toEqual(1);
+    });
+
+    it('should filter description by search criteria', async () => {
+      const search = '_02';
+      filterDto = { search };
+
+      const result = await service.getItemsWithFilters(filterDto);
+
+      expect(result.length).toEqual(1);
+    });
+
+    it('should filter by both name and description', async () => {
+      const search = '_02';
+      const name = 'Item_02';
+      filterDto = { name: '', search };
+
+      const result = await service.getItemsWithFilters(filterDto);
+
+      expect(result.length).toEqual(1);
+      expect(result[0].name).toEqual(name);
+      expect(result[0].description).toEqual(`description${search}`);
+    });
+  });
 });

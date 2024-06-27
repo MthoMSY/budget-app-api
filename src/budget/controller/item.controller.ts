@@ -6,18 +6,26 @@ import {
   Post,
   Param,
   Patch,
+  Query,
 } from '@nestjs/common';
 import { ItemService } from '../service/item.service';
 import { UpdateItemNameDto } from '../dto/update-item-name.dto';
 import { CreateItemDto } from '../dto/create-item.dto';
+import { GetItemFilterDto } from '../dto/get-item-filter-dto';
 
 @Controller('item')
 export class ItemController {
   constructor(private readonly itemService: ItemService) {}
 
-  @Get('/all')
-  async getAllItems(): Promise<ItemModel[]> {
-    return await this.itemService.getAll();
+  @Get()
+  async getFilterItems(
+    @Query() filterDto: GetItemFilterDto,
+  ): Promise<ItemModel[]> {
+    if (Object.keys(filterDto).length) {
+      return await this.itemService.getItemsWithFilters(filterDto);
+    } else {
+      return await this.itemService.getAll();
+    }
   }
 
   @Get('/:id')

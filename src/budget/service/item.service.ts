@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateItemDto } from '../dto/create-item.dto';
 import { v4 } from 'uuid';
-import { json } from 'stream/consumers';
+import { GetItemFilterDto } from '../dto/get-item-filter-dto';
 
 @Injectable()
 export class ItemService {
@@ -46,8 +46,27 @@ export class ItemService {
     const item = await this.getById(id);
     if (item) {
       item.name = name;
+      item.updatedAt = new Date();
       await this.delete(id);
       this.items.push(item);
     }
+  }
+
+  async getItemsWithFilters(filterDto: GetItemFilterDto): Promise<ItemModel[]> {
+    const { name, search } = filterDto;
+    let items = await this.getAll();
+
+    if (name) {
+      items = items.filter((item) => name === item.name);
+    }
+
+    if (search) {
+      items = items.filter(
+        (item) =>
+          item.description.includes(search) || item.name.includes(search),
+      );
+    }
+
+    return items;
   }
 }
