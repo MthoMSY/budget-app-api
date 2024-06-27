@@ -7,6 +7,8 @@ import {
   Param,
   Patch,
   Query,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ItemService } from '../service/item.service';
 import { UpdateItemNameDto } from '../dto/update-item-name.dto';
@@ -34,6 +36,7 @@ export class ItemController {
   }
 
   @Post()
+  @UsePipes(ValidationPipe)
   async createItem(@Body() request: CreateItemDto): Promise<ItemModel> {
     return await this.itemService.create(request);
   }
@@ -44,6 +47,7 @@ export class ItemController {
   }
 
   @Patch('/:id/name')
+  @UsePipes(ValidationPipe)
   async updateName(
     @Param('id') id: string,
     @Body() request: UpdateItemNameDto,
