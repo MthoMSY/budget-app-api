@@ -14,7 +14,7 @@ export class ItemService {
   async getById(id: string): Promise<ItemModel | null> {
     const result = this.items.find((item) => item.id === id);
     if (!result) {
-      return null;
+      throw new NotFoundException(`Item with id: ${id} was not found`);
     }
     return result;
   }

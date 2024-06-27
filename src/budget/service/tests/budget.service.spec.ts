@@ -45,10 +45,8 @@ describe('BudgetService', () => {
     });
   });
   describe('getById', () => {
-    it('should return null if no budget exists with id', async () => {
-      const result = await service.getById('non-existent-id');
-
-      expect(result).toEqual(null);
+    it('should throw an exception if no budget exists with id', async () => {
+      await expect(service.getById('non-existent-id')).rejects.toThrow();
     });
     it('should return budget', async () => {
       const item = await service.create({
@@ -63,7 +61,7 @@ describe('BudgetService', () => {
   });
 
   describe('delete', () => {
-    it('should throw not found exception when budget with given id does not exist', async () => {
+    it('should throw exception when budget with given id does not exist', async () => {
       await expect(service.delete('non-existent')).rejects.toThrow();
     });
     it('should return deleted budget after deletion', async () => {
@@ -77,9 +75,7 @@ describe('BudgetService', () => {
 
       expect(deletedItem).toEqual(createdItem);
 
-      const result = await service.getById(deletedItem.id);
-
-      expect(result).toBe(null);
+      await expect(service.getById(deletedItem.id)).rejects.toThrow();
     });
   });
 });

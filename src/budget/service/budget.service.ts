@@ -14,7 +14,7 @@ export class BudgetService {
     const result = this.budgets.find((budget) => budget.id === id);
 
     if (!result) {
-      return null;
+      throw new NotFoundException(`Budget with id: ${id} was not found`);
     }
 
     return result;

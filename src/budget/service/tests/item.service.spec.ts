@@ -51,10 +51,8 @@ describe('ItemService', () => {
   });
 
   describe('getById', () => {
-    it('should return null if no item exists with id', async () => {
-      const result = await service.getById('non-existent-id');
-
-      expect(result).toEqual(null);
+    it('should throw an exception if no item exists with id', async () => {
+      await expect(service.getById('non-existent-id')).rejects.toThrow();
     });
     it('should return item', async () => {
       const item = await service.create({
@@ -70,7 +68,7 @@ describe('ItemService', () => {
   });
 
   describe('delete', () => {
-    it('should throw not found exception when item with given id does not exist', async () => {
+    it('should throw exception when item with given id does not exist', async () => {
       await expect(service.delete('non-existent')).rejects.toThrow();
     });
     it('should return deleted item after deletion', async () => {
@@ -85,9 +83,7 @@ describe('ItemService', () => {
 
       expect(deletedItem).toEqual(createdItem);
 
-      const result = await service.getById(deletedItem.id);
-
-      expect(result).toBe(null);
+      await expect(service.getById(deletedItem.id)).rejects.toThrow();
     });
   });
 
