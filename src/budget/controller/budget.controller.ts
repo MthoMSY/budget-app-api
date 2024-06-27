@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post, Delete, Param } from '@nestjs/common';
 import { BudgetService } from '../service/budget.service';
 import { CreateBudgetDto } from '../dto/create-budget.dto';
+import { BudgetModel } from '../model/budget.model';
 
 @Controller('budget')
 export class BudgetController {

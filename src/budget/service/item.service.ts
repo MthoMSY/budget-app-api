@@ -1,41 +1,32 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateItemDto } from '../dto/create-item.dto';
-import { v4 } from 'uuid';
 import { GetItemFilterDto } from '../dto/get-item-filter-dto';
+import { Item } from '../entity/item.entity';
+import { ItemRepository } from '../repository/item-repository';
 
 @Injectable()
 export class ItemService {
-  private items: ItemModel[] = [];
-
-  async getAll(): Promise<ItemModel[]> {
-    return this.items;
+  constructor(private readonly itemRepository: ItemRepository) {}
+  async getAll(): Promise<Item[]> {
+    return this.itemRepository.getAll();
   }
 
-  async getById(id: string): Promise<ItemModel | null> {
-    const result = this.items.find((item) => item.id === id);
+  async getById(id: string): Promise<Item> {
+    const result = await this.itemRepository.getById(id);
     if (!result) {
       throw new NotFoundException(`Item with id: ${id} was not found`);
     }
     return result;
   }
 
-  async create(request: CreateItemDto): Promise<ItemModel> {
-    const item = {
-      id: v4(),
-      ...request,
-      createdAt: new Date(),
-      updatedAt: undefined,
-    };
-
-    this.items.push(item);
-    return item;
+  async create(request: CreateItemDto): Promise<Item> {
+    return this.itemRepository.createItem(request);
   }
 
-  async delete(id: string): Promise<ItemModel> {
-    const item = await this.getById(id);
+  async delete(id: string): Promise<Item> {
+    const item = await this.itemRepository.deleteItem(id);
 
     if (item) {
-      this.items = this.items.filter((item) => item.id !== id);
       return item;
     }
 
@@ -43,16 +34,10 @@ export class ItemService {
   }
 
   async updateName(id: string, name: string): Promise<void> {
-    const item = await this.getById(id);
-    if (item) {
-      item.name = name;
-      item.updatedAt = new Date();
-      await this.delete(id);
-      this.items.push(item);
-    }
+    await this.itemRepository.updateName(id, name);
   }
 
-  async getItemsWithFilters(filterDto: GetItemFilterDto): Promise<ItemModel[]> {
+  async getItemsWithFilters(filterDto: GetItemFilterDto): Promise<Item[]> {
     const { name, search } = filterDto;
     let items = await this.getAll();
 

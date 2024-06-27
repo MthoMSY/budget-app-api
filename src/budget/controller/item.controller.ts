@@ -14,6 +14,7 @@ import { ItemService } from '../service/item.service';
 import { UpdateItemNameDto } from '../dto/update-item-name.dto';
 import { CreateItemDto } from '../dto/create-item.dto';
 import { GetItemFilterDto } from '../dto/get-item-filter-dto';
+import { Item } from '../entity/item.entity';
 
 @Controller('item')
 export class ItemController {
@@ -22,7 +23,7 @@ export class ItemController {
   @Get()
   async getFilterItems(
     @Query(ValidationPipe) filterDto: GetItemFilterDto,
-  ): Promise<ItemModel[]> {
+  ): Promise<Item[]> {
     if (Object.keys(filterDto).length) {
       return await this.itemService.getItemsWithFilters(filterDto);
     } else {
@@ -31,18 +32,18 @@ export class ItemController {
   }
 
   @Get('/:id')
-  async getByItemId(@Param('id') id: string): Promise<ItemModel | null> {
+  async getByItemId(@Param('id') id: string): Promise<Item | null> {
     return await this.itemService.getById(id);
   }
 
   @Post()
   @UsePipes(ValidationPipe)
-  async createItem(@Body() request: CreateItemDto): Promise<ItemModel> {
+  async createItem(@Body() request: CreateItemDto): Promise<Item> {
     return await this.itemService.create(request);
   }
 
   @Delete('/:id')
-  async deleteItem(@Param('id') id: string): Promise<ItemModel | null> {
+  async deleteItem(@Param('id') id: string): Promise<Item | null> {
     return await this.itemService.delete(id);
   }
 

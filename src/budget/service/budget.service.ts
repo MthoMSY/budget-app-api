@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBudgetDto } from '../dto/create-budget.dto';
 import { v4 } from 'uuid';
+import { BudgetModel } from '../model/budget.model';
 
 @Injectable()
 export class BudgetService {
