@@ -1,7 +1,7 @@
-import { Repository } from 'typeorm';
 import { Item } from '../entity/item.entity';
 import { CreateItemDto } from '../dto/create-item.dto';
 import { GetItemFilterDto } from '../dto/get-item-filter-dto';
+import { Repository } from 'typeorm';
 
 export class ItemRepository extends Repository<Item> {
   async getById(id: string): Promise<Item> {
@@ -13,7 +13,7 @@ export class ItemRepository extends Repository<Item> {
   }
 
   async createItem(item: CreateItemDto): Promise<Item> {
-    return this.create(item);
+    return this.save(item);
   }
 
   async updateName(id: string, name: string): Promise<Item | null> {

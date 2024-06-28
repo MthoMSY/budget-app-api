@@ -3,10 +3,14 @@ import { CreateItemDto } from '../dto/create-item.dto';
 import { GetItemFilterDto } from '../dto/get-item-filter-dto';
 import { Item } from '../entity/item.entity';
 import { ItemRepository } from '../repository/item-repository';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class ItemService {
-  constructor(private readonly itemRepository: ItemRepository) {}
+  constructor(
+    @InjectRepository(ItemRepository)
+    private readonly itemRepository: ItemRepository,
+  ) {}
   async getAll(): Promise<Item[]> {
     return this.itemRepository.getAll();
   }
@@ -37,7 +41,9 @@ export class ItemService {
     await this.itemRepository.updateName(id, name);
   }
 
-  async getItemsWithFilters(filterDto: GetItemFilterDto): Promise<Item[]> {
+  async getItemsWithFilters(
+    filterDto: GetItemFilterDto,
+  ): Promise<Item[]> {
     return this.itemRepository.getItemsWithFilters(filterDto);
   }
 }

@@ -1,6 +1,8 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { Item } from 'src/budget/entity/item.entity';
 
-export const typeormConfig: TypeOrmModuleOptions = {
+export const entities = [Item];
+export const typeOrmConfig: TypeOrmModuleOptions = {
   type: 'postgres',
   host: 'localhost',
   port: 3555,

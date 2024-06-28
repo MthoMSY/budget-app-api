@@ -9,6 +9,6 @@ import { ItemRepository } from './repository/item-repository';
 @Module({
   imports: [TypeOrmModule.forFeature([ItemRepository])],
   controllers: [BudgetController, ItemController],
-  providers: [BudgetService, ItemService],
+  providers: [BudgetService, ItemService, ItemRepository],
 })
 export class BudgetModule {}

@@ -41,7 +41,7 @@ describe('ItemService', () => {
 
   describe('create', () => {
     it('should create item', async () => {
-      const request = makeCreateItemDto();
+      const request = makeCreateItemDto({});
       itemRepository.createItem.mockResolvedValue(makeItem(request));
       const result = await service.create(request);
 
@@ -55,7 +55,7 @@ describe('ItemService', () => {
       await expect(service.getById('non-existent-id')).rejects.toThrow();
     });
     it('should call repository getById method', async () => {
-      const item = makeItem();
+      const item = makeItem({});
       itemRepository.getById.mockResolvedValue(item);
       await service.getById(item.id);
 
@@ -68,7 +68,7 @@ describe('ItemService', () => {
       await expect(service.delete('non-existent')).rejects.toThrow();
     });
     it('should call repository deleteItem method', async () => {
-      const createdItem = makeItem();
+      const createdItem = makeItem({});
       itemRepository.deleteItem.mockResolvedValue(createdItem);
 
       await service.delete(createdItem.id);
@@ -79,7 +79,7 @@ describe('ItemService', () => {
 
   describe('update name', () => {
     it('should call repository updateName', async () => {
-      const item = makeItem();
+      const item = makeItem({});
       const updateName = 'updatedItem';
 
       service.updateName(item.id, updateName);
@@ -120,28 +120,20 @@ function makeItems(numberOfRequests: number): Item[] {
   return items;
 }
 
-function makeItem(request?: {
-  cost?: number;
-  name?: string;
-  description?: string;
-}): Item {
+function makeItem(request: Partial<CreateItemDto>): Item {
   return {
-    cost: request?.cost ?? 25,
-    name: request?.name ?? `Item`,
-    description: request?.description ?? `description`,
+    cost: request.cost ?? 25,
+    name: request.name ?? `Item`,
+    description: request.description ?? `description`,
     id: v4(),
     createdAt: new Date(),
   } as Item;
 }
 
-function makeCreateItemDto(request?: {
-  cost?: number;
-  name?: string;
-  description?: string;
-}): CreateItemDto {
+function makeCreateItemDto(request: Partial<CreateItemDto>): CreateItemDto {
   return {
-    cost: request?.cost ?? 25,
-    name: request?.name ?? `Item`,
-    description: request?.description ?? `description`,
+    cost: request.cost ?? 25,
+    name: request.name ?? `Item`,
+    description: request.description ?? `description`,
   };
 }
