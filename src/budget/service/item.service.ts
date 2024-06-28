@@ -38,20 +38,6 @@ export class ItemService {
   }
 
   async getItemsWithFilters(filterDto: GetItemFilterDto): Promise<Item[]> {
-    const { name, search } = filterDto;
-    let items = await this.getAll();
-
-    if (name) {
-      items = items.filter((item) => name === item.name);
-    }
-
-    if (search) {
-      items = items.filter(
-        (item) =>
-          item.description.includes(search) || item.name.includes(search),
-      );
-    }
-
-    return items;
+    return this.itemRepository.getItemsWithFilters(filterDto);
   }
 }

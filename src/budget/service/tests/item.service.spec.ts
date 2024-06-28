@@ -1,15 +1,19 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { ItemService } from '../item.service';
+import { ItemRepository } from '../../repository/item-repository';
+import { AutoMocker } from 'automocker';
+import { Item } from 'src/budget/entity/item.entity';
+import { v4 } from 'uuid';
+import { CreateItemDto } from 'src/budget/dto/create-item.dto';
 
 describe('ItemService', () => {
+  const automocker = AutoMocker.createJestMocker(jest);
   let service: ItemService;
+  const itemRepository = automocker.createMockInstance(ItemRepository);
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [ItemService],
-    }).compile();
+    jest.resetAllMocks();
 
-    service = module.get<ItemService>(ItemService);
+    service = new ItemService(itemRepository);
   });
 
   it('should be defined', () => {
@@ -18,31 +22,27 @@ describe('ItemService', () => {
 
   describe('getAll', () => {
     it('should return empty array when there are no items', async () => {
+      itemRepository.getAll.mockResolvedValue([]);
       const result = await service.getAll();
 
       expect(result).toStrictEqual([]);
+      expect(itemRepository.getAll).toHaveBeenCalledTimes(1);
     });
     it('should return items that have been created', async () => {
-      for (let index = 0; index < 3; index++) {
-        await service.create({
-          cost: index + 0.5,
-          name: `Item_${index + 1}`,
-          description: `description`,
-        });
-      }
+      const expectedItems = makeItems(3);
+      itemRepository.getAll.mockResolvedValue(expectedItems);
+
       const result = await service.getAll();
 
       expect(result.length).toStrictEqual(3);
+      expect(itemRepository.getAll).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('create', () => {
     it('should create item', async () => {
-      const request = {
-        cost: 0.5,
-        name: `Item`,
-        description: `description`,
-      };
+      const request = makeCreateItemDto();
+      itemRepository.createItem.mockResolvedValue(makeItem(request));
       const result = await service.create(request);
 
       expect(result).toBeDefined();
@@ -54,16 +54,12 @@ describe('ItemService', () => {
     it('should throw an exception if no item exists with id', async () => {
       await expect(service.getById('non-existent-id')).rejects.toThrow();
     });
-    it('should return item', async () => {
-      const item = await service.create({
-        name: 'Test',
-        description: 'description',
-        cost: 350,
-      });
+    it('should call repository getById method', async () => {
+      const item = makeItem();
+      itemRepository.getById.mockResolvedValue(item);
+      await service.getById(item.id);
 
-      const result = await service.getById(item.id);
-
-      expect(result).toEqual(item);
+      expect(itemRepository.getById).toHaveBeenCalledWith(item.id);
     });
   });
 
@@ -71,79 +67,81 @@ describe('ItemService', () => {
     it('should throw exception when item with given id does not exist', async () => {
       await expect(service.delete('non-existent')).rejects.toThrow();
     });
-    it('should return deleted item after deletion', async () => {
-      const request = {
-        cost: 0.5,
-        name: `Item`,
-        description: `description`,
-      };
-      const createdItem = await service.create(request);
+    it('should call repository deleteItem method', async () => {
+      const createdItem = makeItem();
+      itemRepository.deleteItem.mockResolvedValue(createdItem);
 
-      const deletedItem = await service.delete(createdItem.id);
+      await service.delete(createdItem.id);
 
-      expect(deletedItem).toEqual(createdItem);
-
-      await expect(service.getById(deletedItem.id)).rejects.toThrow();
+      expect(itemRepository.deleteItem).toHaveBeenCalledWith(createdItem.id);
     });
   });
 
   describe('update name', () => {
-    it('should update name of existing item', async () => {
-      const request = {
-        cost: 0.5,
-        name: `Item`,
-        description: `description`,
-      };
-      const updateName = 'ItemUpdate';
+    it('should call repository updateName', async () => {
+      const item = makeItem();
+      const updateName = 'updatedItem';
 
-      const item = await service.create(request);
       service.updateName(item.id, updateName);
-      const result = await service.getById(item.id);
 
-      expect(result.name).toEqual(updateName);
+      expect(itemRepository.updateName).toHaveBeenCalledWith(
+        item.id,
+        updateName,
+      );
     });
   });
 
   describe('getItemsWithFilters', () => {
-    let filterDto = {};
-    beforeEach(async () => {
-      for (let index = 0; index < 5; index++) {
-        await service.create({
-          cost: index * 0.5,
-          name: `Item_0${index}`,
-          description: `description_0${index}`,
-        });
-      }
-    });
+    it('should call repository getItemsWithFilters with filterDto request', async () => {
+      const filterDto = { name: 'Item_02', search: '_02' };
 
-    it('should filter by name', async () => {
-      const expectedItemName = 'Item_02';
-      filterDto = { name: expectedItemName };
+      await service.getItemsWithFilters(filterDto);
 
-      const result = await service.getItemsWithFilters(filterDto);
-
-      expect(result.length).toEqual(1);
-    });
-
-    it('should filter description by search criteria', async () => {
-      const search = '_02';
-      filterDto = { search };
-
-      const result = await service.getItemsWithFilters(filterDto);
-
-      expect(result.length).toEqual(1);
-    });
-
-    it('should filter by both name and description', async () => {
-      const search = '_02';
-      const name = 'Item_02';
-      filterDto = { name: '', search };
-
-      const result = await service.getItemsWithFilters(filterDto);
-
-      expect(result.length).toEqual(1);
-      expect(result[0].name).toEqual(name);
-      expect(result[0].description).toEqual(`description${search}`);
+      expect(itemRepository.getItemsWithFilters).toHaveBeenCalledWith(
+        filterDto,
+      );
     });
   });
 });
+
+function makeItems(numberOfRequests: number): Item[] {
+  const items: Item[] = [];
+  for (let index = 0; index < numberOfRequests; index++) {
+    items.push({
+      cost: index + 0.5,
+      name: `Item_${index + 1}`,
+      description: `description`,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      id: v4(),
+    } as Item);
+  }
+
+  return items;
+}
+
+function makeItem(request?: {
+  cost?: number;
+  name?: string;
+  description?: string;
+}): Item {
+  return {
+    cost: request?.cost ?? 25,
+    name: request?.name ?? `Item`,
+    description: request?.description ?? `description`,
+    id: v4(),
+    createdAt: new Date(),
+  } as Item;
+}
+
+function makeCreateItemDto(request?: {
+  cost?: number;
+  name?: string;
+  description?: string;
+}): CreateItemDto {
+  return {
+    cost: request?.cost ?? 25,
+    name: request?.name ?? `Item`,
+    description: request?.description ?? `description`,
+  };
+}

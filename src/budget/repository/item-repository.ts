@@ -1,6 +1,7 @@
 import { Repository } from 'typeorm';
 import { Item } from '../entity/item.entity';
 import { CreateItemDto } from '../dto/create-item.dto';
+import { GetItemFilterDto } from '../dto/get-item-filter-dto';
 
 export class ItemRepository extends Repository<Item> {
   async getById(id: string): Promise<Item> {
@@ -8,7 +9,7 @@ export class ItemRepository extends Repository<Item> {
   }
 
   async getAll(): Promise<Item[]> {
-    throw Error('Not implemented');
+    return await this.find();
   }
 
   async createItem(item: CreateItemDto): Promise<Item> {
@@ -38,5 +39,27 @@ export class ItemRepository extends Repository<Item> {
     this.delete(id);
 
     return found;
+  }
+
+  async getItemsWithFilters(filterDto: GetItemFilterDto): Promise<Item[]> {
+    if (filterDto.name && filterDto.search) {
+      return await this.find({
+        where: { name: filterDto.name, description: filterDto.search },
+      });
+    }
+
+    if (filterDto.name) {
+      return await this.find({
+        where: { name: filterDto.name },
+      });
+    }
+
+    if (filterDto.search) {
+      return await this.find({
+        where: { description: filterDto.search },
+      });
+    }
+
+    return await this.getAll();
   }
 }
