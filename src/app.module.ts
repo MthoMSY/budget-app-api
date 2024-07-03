@@ -3,9 +3,10 @@ import { BudgetModule } from './budget/budget.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from './config/typeorm.config';
 import { DataSource } from 'typeorm';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(typeOrmConfig), BudgetModule],
+  imports: [TypeOrmModule.forRoot(typeOrmConfig), BudgetModule, AuthModule],
 })
 export class AppModule {
   constructor(private dataSource: DataSource) {}

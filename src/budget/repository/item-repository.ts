@@ -1,7 +1,7 @@
 import { Item } from '../entity/item.entity';
 import { CreateItemDto } from '../dto/create-item.dto';
 import { GetItemFilterDto } from '../dto/get-item-filter-dto';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 export class ItemRepository extends Repository<Item> {
@@ -55,19 +55,22 @@ export class ItemRepository extends Repository<Item> {
   async getItemsWithFilters(filterDto: GetItemFilterDto): Promise<Item[]> {
     if (filterDto.name && filterDto.search) {
       return await this.itemRepository.find({
-        where: { name: filterDto.name, description: filterDto.search },
+        where: {
+          name: Like(`%${filterDto.name}%`),
+          description: Like(`%${filterDto.search}%`),
+        },
       });
     }
 
     if (filterDto.name) {
       return await this.itemRepository.find({
-        where: { name: filterDto.name },
+        where: { name: Like(`%${filterDto.name}%`) },
       });
     }
 
     if (filterDto.search) {
       return await this.itemRepository.find({
-        where: { description: filterDto.search },
+        where: { description: Like(`%${filterDto.search}%`) },
       });
     }
 
