@@ -2,22 +2,33 @@ import { Item } from '../entity/item.entity';
 import { CreateItemDto } from '../dto/create-item.dto';
 import { GetItemFilterDto } from '../dto/get-item-filter-dto';
 import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 export class ItemRepository extends Repository<Item> {
+  constructor(
+    @InjectRepository(Item)
+    private itemRepository: Repository<Item>,
+  ) {
+    super(
+      itemRepository.target,
+      itemRepository.manager,
+      itemRepository.queryRunner,
+    );
+  }
   async getById(id: string): Promise<Item> {
-    return await this.findOne({ where: { id } });
+    return await this.itemRepository.findOne({ where: { id } });
   }
 
   async getAll(): Promise<Item[]> {
-    return await this.find();
+    return await this.itemRepository.find();
   }
 
   async createItem(item: CreateItemDto): Promise<Item> {
-    return this.save(item);
+    return this.itemRepository.save(item);
   }
 
   async updateName(id: string, name: string): Promise<Item | null> {
-    const found = await this.findOne({ where: { id } });
+    const found = await this.itemRepository.findOne({ where: { id } });
 
     if (!found) {
       return null;
@@ -31,7 +42,7 @@ export class ItemRepository extends Repository<Item> {
   }
 
   async deleteItem(id: string): Promise<Item | null> {
-    const found = await this.findOne({ where: { id } });
+    const found = await this.itemRepository.findOne({ where: { id } });
 
     if (!found) {
       return null;
@@ -43,19 +54,19 @@ export class ItemRepository extends Repository<Item> {
 
   async getItemsWithFilters(filterDto: GetItemFilterDto): Promise<Item[]> {
     if (filterDto.name && filterDto.search) {
-      return await this.find({
+      return await this.itemRepository.find({
         where: { name: filterDto.name, description: filterDto.search },
       });
     }
 
     if (filterDto.name) {
-      return await this.find({
+      return await this.itemRepository.find({
         where: { name: filterDto.name },
       });
     }
 
     if (filterDto.search) {
-      return await this.find({
+      return await this.itemRepository.find({
         where: { description: filterDto.search },
       });
     }
