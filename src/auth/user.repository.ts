@@ -1,7 +1,7 @@
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AuthCredentialsDto } from './dto/auth-credentials.dto';
+import { SignInDto, SignUpDto } from './dto/auth-credentials.dto';
 import {
   BadRequestException,
   InternalServerErrorException,
@@ -21,7 +21,7 @@ export class UserRepository extends Repository<User> {
     );
   }
 
-  async signUp(request: AuthCredentialsDto) {
+  async signUp(request: SignUpDto) {
     try {
       const encryptionData = await this.hashPassword(request.password);
 
@@ -49,9 +49,7 @@ export class UserRepository extends Repository<User> {
     return { hash: hashedPassword, salt };
   }
 
-  async validateUserPassword(
-    credentials: AuthCredentialsDto,
-  ): Promise<string | null> {
+  async validateUserPassword(credentials: SignInDto): Promise<string | null> {
     const { username, password } = credentials;
 
     const user = await this.findOne({ where: { username } });
