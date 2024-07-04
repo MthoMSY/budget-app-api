@@ -1,15 +1,16 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
+import { UserRepository } from './user.repository';
+import { AutoMocker } from 'automocker';
 
 describe('AuthService', () => {
+  const automocker = AutoMocker.createJestMocker(jest);
   let service: AuthService;
+  const userRepository = automocker.createMockInstance(UserRepository);
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [AuthService],
-    }).compile();
+    jest.resetAllMocks();
 
-    service = module.get<AuthService>(AuthService);
+    service = new AuthService(userRepository);
   });
 
   it('should be defined', () => {

@@ -21,14 +21,10 @@ export class ItemController {
   constructor(private readonly itemService: ItemService) {}
 
   @Get()
-  async getFilterItems(
+  async getAll(
     @Query(ValidationPipe) filterDto: GetItemFilterDto,
   ): Promise<Item[]> {
-    if (Object.keys(filterDto).length) {
-      return await this.itemService.getItemsWithFilters(filterDto);
-    } else {
-      return await this.itemService.getAll();
-    }
+    return await this.itemService.getItems(filterDto);
   }
 
   @Get('/:id')

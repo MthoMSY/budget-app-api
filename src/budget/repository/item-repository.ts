@@ -19,7 +19,7 @@ export class ItemRepository extends Repository<Item> {
     return await this.itemRepository.findOne({ where: { id } });
   }
 
-  async getAll(): Promise<Item[]> {
+  private async getAll(): Promise<Item[]> {
     return await this.itemRepository.find();
   }
 
@@ -52,7 +52,7 @@ export class ItemRepository extends Repository<Item> {
     return found;
   }
 
-  async getItemsWithFilters(filterDto: GetItemFilterDto): Promise<Item[]> {
+  async getItems(filterDto: GetItemFilterDto): Promise<Item[]> {
     if (filterDto.name && filterDto.search) {
       return await this.itemRepository.find({
         where: {

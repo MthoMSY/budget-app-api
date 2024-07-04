@@ -7,9 +7,6 @@ import { ItemRepository } from '../repository/item-repository';
 @Injectable()
 export class ItemService {
   constructor(private readonly itemRepository: ItemRepository) {}
-  async getAll(): Promise<Item[]> {
-    return this.itemRepository.getAll();
-  }
 
   async getById(id: string): Promise<Item> {
     const result = await this.itemRepository.getById(id);
@@ -37,7 +34,7 @@ export class ItemService {
     await this.itemRepository.updateName(id, name);
   }
 
-  async getItemsWithFilters(filterDto: GetItemFilterDto): Promise<Item[]> {
-    return this.itemRepository.getItemsWithFilters(filterDto);
+  async getItems(filterDto: GetItemFilterDto): Promise<Item[]> {
+    return this.itemRepository.getItems(filterDto);
   }
 }

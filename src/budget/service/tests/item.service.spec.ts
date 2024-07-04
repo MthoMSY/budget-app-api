@@ -20,25 +20,6 @@ describe('ItemService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('getAll', () => {
-    it('should return empty array when there are no items', async () => {
-      itemRepository.getAll.mockResolvedValue([]);
-      const result = await service.getAll();
-
-      expect(result).toStrictEqual([]);
-      expect(itemRepository.getAll).toHaveBeenCalledTimes(1);
-    });
-    it('should return items that have been created', async () => {
-      const expectedItems = makeItems(3);
-      itemRepository.getAll.mockResolvedValue(expectedItems);
-
-      const result = await service.getAll();
-
-      expect(result.length).toStrictEqual(3);
-      expect(itemRepository.getAll).toHaveBeenCalledTimes(1);
-    });
-  });
-
   describe('create', () => {
     it('should create item', async () => {
       const request = makeCreateItemDto({});
@@ -91,15 +72,29 @@ describe('ItemService', () => {
     });
   });
 
-  describe('getItemsWithFilters', () => {
+  describe('getItems', () => {
+    it('should return empty array when there are no items', async () => {
+      itemRepository.getItems.mockResolvedValue([]);
+      const result = await service.getItems({});
+
+      expect(result).toStrictEqual([]);
+      expect(itemRepository.getItems).toHaveBeenCalledTimes(1);
+    });
+    it('should return items that have been created', async () => {
+      const expectedItems = makeItems(3);
+      itemRepository.getItems.mockResolvedValue(expectedItems);
+
+      const result = await service.getItems({});
+
+      expect(result.length).toStrictEqual(3);
+      expect(itemRepository.getItems).toHaveBeenCalledTimes(1);
+    });
     it('should call repository getItemsWithFilters with filterDto request', async () => {
       const filterDto = { name: 'Item_02', search: '_02' };
 
-      await service.getItemsWithFilters(filterDto);
+      await service.getItems(filterDto);
 
-      expect(itemRepository.getItemsWithFilters).toHaveBeenCalledWith(
-        filterDto,
-      );
+      expect(itemRepository.getItems).toHaveBeenCalledWith(filterDto);
     });
   });
 });
