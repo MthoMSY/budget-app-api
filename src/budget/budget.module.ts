@@ -6,9 +6,10 @@ import { ItemService } from './service/item.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Item } from './entity/item.entity';
 import { ItemRepository } from './repository/item-repository';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Item])],
+  imports: [TypeOrmModule.forFeature([Item]), AuthModule],
   controllers: [BudgetController, ItemController],
   providers: [BudgetService, ItemService, ItemRepository],
   exports: [BudgetService, TypeOrmModule],

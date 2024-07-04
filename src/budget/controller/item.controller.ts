@@ -9,14 +9,17 @@ import {
   Query,
   UsePipes,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { ItemService } from '../service/item.service';
 import { UpdateItemNameDto } from '../dto/update-item-name.dto';
 import { CreateItemDto } from '../dto/create-item.dto';
 import { GetItemFilterDto } from '../dto/get-item-filter-dto';
 import { Item } from '../entity/item.entity';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('item')
+@UseGuards(AuthGuard())
 export class ItemController {
   constructor(private readonly itemService: ItemService) {}
 
