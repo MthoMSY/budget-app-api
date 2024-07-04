@@ -16,4 +16,14 @@ describe('AuthService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  describe('signUp', () => {
+    it('should call user repository sign up with correct arguments', async () => {
+      const request = { username: 'test', password: 'test#5' };
+
+      await service.signUp(request);
+
+      expect(userRepository.signUp).toHaveBeenCalledWith(request);
+    });
+  });
 });
