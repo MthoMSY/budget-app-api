@@ -6,6 +6,7 @@ import {
   BadRequestException,
   InternalServerErrorException,
 } from '@nestjs/common';
+import * as encrypt from 'bcrypt';
 
 const DUPLICATE_KEY_ERROR_CODE = '23505';
 
@@ -22,14 +23,29 @@ export class UserRepository extends Repository<User> {
 
   async signUp(request: AuthCredentialsDto) {
     try {
-      await this.userRepository.save({ ...request });
+      const encryptionData = await this.hashPassword(request.password);
+
+      await this.userRepository.save({
+        ...request,
+        password: encryptionData.hash,
+        salt: encryptionData.salt,
+      });
     } catch (error) {
-      if (error.code === DUPLICATE_KEY_ERROR_CODE)
+      if (error.code === DUPLICATE_KEY_ERROR_CODE) {
         throw new BadRequestException(
           `User with username '${request.username}' already exists`,
         );
+      }
 
       throw new InternalServerErrorException();
     }
+  }
+
+  private async hashPassword(
+    password: string,
+  ): Promise<{ hash: string; salt: string }> {
+    const salt = await encrypt.genSalt();
+    const hashedPassword = await encrypt.hash(password, salt);
+    return { hash: hashedPassword, salt };
   }
 }
