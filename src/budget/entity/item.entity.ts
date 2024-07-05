@@ -3,14 +3,20 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Budget } from './budget.entity';
 
 @Entity()
 export class Item extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Column()
+  budgetId: string;
 
   @Column()
   name: string;
@@ -26,4 +32,8 @@ export class Item extends BaseEntity {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @ManyToOne(() => Budget, (budget) => budget.items, { cascade: true })
+  @JoinColumn()
+  budget: Budget;
 }

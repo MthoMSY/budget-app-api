@@ -2,11 +2,12 @@ import {
   BaseEntity,
   Column,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
-
 import * as encrypt from 'bcrypt';
+import { Budget } from 'src/budget/entity/budget.entity';
 
 @Entity()
 @Unique(['username'])
@@ -28,4 +29,7 @@ export class User extends BaseEntity {
 
     return hash === this.password;
   }
+
+  @OneToMany(() => Budget, (budget) => budget.user)
+  budgets: Budget[];
 }
