@@ -7,7 +7,7 @@ import {
   Unique,
 } from 'typeorm';
 import * as encrypt from 'bcrypt';
-import { Budget } from 'src/budget/entity/budget.entity';
+import { Budget } from '../budget/entity/budget.entity';
 
 @Entity()
 @Unique(['username'])

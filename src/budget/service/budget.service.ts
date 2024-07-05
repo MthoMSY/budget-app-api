@@ -1,46 +1,40 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBudgetDto } from '../dto/create-budget.dto';
-import { v4 } from 'uuid';
-import { BudgetModel } from '../model/budget.model';
+import { BudgetRepository } from '../repository/budget-repository';
+import { Budget } from '../entity/budget.entity';
+import { GetBudgetFilterDto } from '../dto/get-budget-filter-dto';
 
 @Injectable()
 export class BudgetService {
-  private budgets: BudgetModel[] = [];
+  constructor(private readonly budgetRepository: BudgetRepository) {}
 
-  async getAll(): Promise<BudgetModel[]> {
-    return this.budgets;
-  }
-
-  async getById(id: string): Promise<BudgetModel | null> {
-    const result = this.budgets.find((budget) => budget.id === id);
-
+  async getById(id: string): Promise<Budget> {
+    const result = await this.budgetRepository.getById(id);
     if (!result) {
       throw new NotFoundException(`Budget with id: ${id} was not found`);
     }
-
     return result;
   }
 
-  async create(request: CreateBudgetDto): Promise<BudgetModel> {
-    const budget: BudgetModel = {
-      id: v4(),
-      ...request,
-      createdAt: new Date(),
-      updatedAt: undefined,
-    };
-    this.budgets.push(budget);
-
-    return budget;
+  async create(request: CreateBudgetDto): Promise<Budget> {
+    return this.budgetRepository.createBudget(request);
   }
 
-  async delete(id: string): Promise<BudgetModel> {
-    const budget = await this.getById(id);
+  async delete(id: string): Promise<Budget> {
+    const Budget = await this.budgetRepository.deleteBudget(id);
 
-    if (budget) {
-      this.budgets = this.budgets.filter((budget) => budget.id !== id);
-      return budget;
+    if (Budget) {
+      return Budget;
     }
 
     throw new NotFoundException(`Budget with id: ${id} was not found`);
+  }
+
+  async updateName(id: string, name: string): Promise<void> {
+    await this.budgetRepository.updateName(id, name);
+  }
+
+  async getBudgets(filterDto: GetBudgetFilterDto): Promise<Budget[]> {
+    return this.budgetRepository.getBudgets(filterDto);
   }
 }

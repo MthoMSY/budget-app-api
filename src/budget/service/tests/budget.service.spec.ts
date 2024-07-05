@@ -1,62 +1,47 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { AutoMocker } from 'automocker';
 import { BudgetService } from '../budget.service';
+import { BudgetRepository } from '../../repository/budget-repository';
+import { Budget } from '../../entity/budget.entity';
+import { CreateBudgetDto } from '../../dto/create-budget.dto';
+import { v4 } from 'uuid';
 
 describe('BudgetService', () => {
+  const automocker = AutoMocker.createJestMocker(jest);
   let service: BudgetService;
+  const budgetRepository = automocker.createMockInstance(BudgetRepository);
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [BudgetService],
-    }).compile();
+    jest.resetAllMocks();
 
-    service = module.get<BudgetService>(BudgetService);
+    service = new BudgetService(budgetRepository);
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
-  describe('getAll', () => {
-    it('should return empty array when there are no budgets', async () => {
-      const result = await service.getAll();
-
-      expect(result).toStrictEqual([]);
-    });
-
-    it('should return budgets that have been created', async () => {
-      for (let index = 0; index < 3; index++) {
-        await service.create({ name: `Budget_${index + 1}`, items: [] });
-      }
-      const result = await service.getAll();
-
-      expect(result.length).toStrictEqual(3);
-    });
-  });
   describe('create', () => {
     it('should create budget', async () => {
-      const request = {
-        name: `Budget`,
-        items: [],
-      };
+      const request = makeCreateBudgetDto({});
+      const expectedResponse = makeBudget(request);
+      budgetRepository.createBudget.mockResolvedValue(expectedResponse);
       const result = await service.create(request);
 
       expect(result).toBeDefined();
-      expect(result).toEqual(expect.objectContaining({ ...request }));
+      expect(result).toEqual(expect.objectContaining({ ...expectedResponse }));
     });
   });
+
   describe('getById', () => {
     it('should throw an exception if no budget exists with id', async () => {
       await expect(service.getById('non-existent-id')).rejects.toThrow();
     });
-    it('should return budget', async () => {
-      const item = await service.create({
-        name: 'Test',
-        items: [],
-      });
+    it('should call repository getById method', async () => {
+      const budget = makeBudget({});
+      budgetRepository.getById.mockResolvedValue(budget);
+      await service.getById(budget.id);
 
-      const result = await service.getById(item.id);
-
-      expect(result).toEqual(item);
+      expect(budgetRepository.getById).toHaveBeenCalledWith(budget.id);
     });
   });
 
@@ -64,18 +49,89 @@ describe('BudgetService', () => {
     it('should throw exception when budget with given id does not exist', async () => {
       await expect(service.delete('non-existent')).rejects.toThrow();
     });
-    it('should return deleted budget after deletion', async () => {
-      const request = {
-        name: `budget`,
-        items: [],
-      };
-      const createdItem = await service.create(request);
+    it('should call repository deleteBudget method', async () => {
+      const createdBudget = makeBudget({});
+      budgetRepository.deleteBudget.mockResolvedValue(createdBudget);
 
-      const deletedItem = await service.delete(createdItem.id);
+      await service.delete(createdBudget.id);
 
-      expect(deletedItem).toEqual(createdItem);
+      expect(budgetRepository.deleteBudget).toHaveBeenCalledWith(
+        createdBudget.id,
+      );
+    });
+  });
 
-      await expect(service.getById(deletedItem.id)).rejects.toThrow();
+  describe('update name', () => {
+    it('should call repository updateName', async () => {
+      const budget = makeBudget({});
+      const updateName = 'updatedBudget';
+
+      service.updateName(budget.id, updateName);
+
+      expect(budgetRepository.updateName).toHaveBeenCalledWith(
+        budget.id,
+        updateName,
+      );
+    });
+  });
+
+  describe('getBudgets', () => {
+    it('should return empty array when there are no budgets', async () => {
+      budgetRepository.getBudgets.mockResolvedValue([]);
+      const result = await service.getBudgets({});
+
+      expect(result).toStrictEqual([]);
+      expect(budgetRepository.getBudgets).toHaveBeenCalledTimes(1);
+    });
+    it('should return budgets that have been created', async () => {
+      const expectedBudgets = makeBudgets(3);
+      budgetRepository.getBudgets.mockResolvedValue(expectedBudgets);
+
+      const result = await service.getBudgets({});
+
+      expect(result.length).toStrictEqual(3);
+      expect(budgetRepository.getBudgets).toHaveBeenCalledTimes(1);
+    });
+    it('should call repository getBudgetsWithFilters with filterDto request', async () => {
+      const filterDto = { name: 'Budget_02', search: '_02' };
+
+      await service.getBudgets(filterDto);
+
+      expect(budgetRepository.getBudgets).toHaveBeenCalledWith(filterDto);
     });
   });
 });
+
+function makeBudgets(numberOfRequests: number): Budget[] {
+  const budgets: Budget[] = [];
+  for (let index = 0; index < numberOfRequests; index++) {
+    budgets.push({
+      name: `Budget_${index + 1}`,
+      description: `description`,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      id: v4(),
+    } as Budget);
+  }
+
+  return budgets;
+}
+
+function makeBudget(request: Partial<CreateBudgetDto>): Budget {
+  return {
+    name: request.name ?? `Budget`,
+    description: request.description ?? `description`,
+    createdAt: new Date(),
+    id: v4(),
+  } as Budget;
+}
+
+function makeCreateBudgetDto(
+  request: Partial<CreateBudgetDto>,
+): CreateBudgetDto {
+  return {
+    name: request.name ?? `Budget`,
+    description: request.description ?? `description`,
+    items: [],
+  };
+}

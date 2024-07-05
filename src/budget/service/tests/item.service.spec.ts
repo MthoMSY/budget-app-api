@@ -1,9 +1,9 @@
 import { ItemService } from '../item.service';
 import { ItemRepository } from '../../repository/item-repository';
 import { AutoMocker } from 'automocker';
-import { Item } from 'src/budget/entity/item.entity';
 import { v4 } from 'uuid';
-import { CreateItemDto } from 'src/budget/dto/create-item.dto';
+import { CreateItemDto } from '../../dto/create-item.dto';
+import { Item } from '../../entity/item.entity';
 
 describe('ItemService', () => {
   const automocker = AutoMocker.createJestMocker(jest);
