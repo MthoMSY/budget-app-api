@@ -10,7 +10,9 @@ export class SignUpDto {
 
   @Length(8, 20)
   @IsString()
-  @Matches(PASSWORD_REGEX, { message: 'Password is to weak' })
+  @Matches(PASSWORD_REGEX, {
+    message: 'Password strength does not match criteria',
+  })
   password: string;
 }
 
