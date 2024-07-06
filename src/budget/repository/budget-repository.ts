@@ -17,20 +17,28 @@ export class BudgetRepository extends Repository<Budget> {
     );
   }
 
-  async getById(id: string): Promise<Budget> {
-    return await this.budgetRepository.findOne({ where: { id } });
+  async getById(id: string, user: User): Promise<Budget> {
+    return await this.budgetRepository.findOne({
+      where: { id, userId: user.id },
+    });
   }
 
-  private async getAll(): Promise<Budget[]> {
-    return await this.budgetRepository.find();
+  private async getAll(userId: string): Promise<Budget[]> {
+    return await this.budgetRepository.find({ where: { userId } });
   }
 
   async createBudget(request: CreateBudgetDto, user: User): Promise<Budget> {
     return this.budgetRepository.save({ ...request, userId: user.id });
   }
 
-  async updateName(id: string, name: string): Promise<Budget | null> {
-    const found = await this.budgetRepository.findOne({ where: { id } });
+  async updateName(
+    id: string,
+    name: string,
+    user: User,
+  ): Promise<Budget | null> {
+    const found = await this.budgetRepository.findOne({
+      where: { id, userId: user.id },
+    });
 
     if (!found) {
       return null;
@@ -43,8 +51,10 @@ export class BudgetRepository extends Repository<Budget> {
     return found;
   }
 
-  async deleteBudget(id: string): Promise<Budget | null> {
-    const found = await this.budgetRepository.findOne({ where: { id } });
+  async deleteBudget(id: string, user: User): Promise<Budget | null> {
+    const found = await this.budgetRepository.findOne({
+      where: { id, userId: user.id },
+    });
 
     if (!found) {
       return null;
@@ -54,10 +64,14 @@ export class BudgetRepository extends Repository<Budget> {
     return found;
   }
 
-  async getBudgets(filterDto: GetBudgetFilterDto): Promise<Budget[]> {
+  async getBudgets(
+    filterDto: GetBudgetFilterDto,
+    user: User,
+  ): Promise<Budget[]> {
     if (filterDto.name && filterDto.search) {
       return await this.budgetRepository.find({
         where: {
+          userId: user.id,
           name: Like(`%${filterDto.name}%`),
           description: Like(`%${filterDto.search}%`),
         },
@@ -66,16 +80,16 @@ export class BudgetRepository extends Repository<Budget> {
 
     if (filterDto.name) {
       return await this.budgetRepository.find({
-        where: { name: Like(`%${filterDto.name}%`) },
+        where: { userId: user.id, name: Like(`%${filterDto.name}%`) },
       });
     }
 
     if (filterDto.search) {
       return await this.budgetRepository.find({
-        where: { description: Like(`%${filterDto.search}%`) },
+        where: { userId: user.id, description: Like(`%${filterDto.search}%`) },
       });
     }
 
-    return await this.getAll();
+    return await this.getAll(user.id);
   }
 }

@@ -25,19 +25,20 @@ import { User } from '../../auth/user.entity';
 export class BudgetController {
   constructor(private readonly budgetService: BudgetService) {}
 
-
-  // TODO: update all endpoints to operate on data for the logged in user.
   @Get()
   async getAllBudgets(
     @Query(ValidationPipe) filterDto: GetBudgetFilterDto,
-    // @GetUser() user: User,
+    @GetUser() user: User,
   ) {
-    return await this.budgetService.getBudgets(filterDto);
+    return await this.budgetService.getBudgets(filterDto, user);
   }
 
   @Get('/:id')
-  async getByBudgetId(@Param('id') id: string): Promise<Budget | null> {
-    return await this.budgetService.getById(id);
+  async getByBudgetId(
+    @Param('id') id: string,
+    @GetUser() user: User,
+  ): Promise<Budget | null> {
+    return await this.budgetService.getById(id, user);
   }
 
   @Post()
@@ -49,8 +50,11 @@ export class BudgetController {
   }
 
   @Delete('/:id')
-  async deleteItem(@Param('id') budgetId: string): Promise<Budget | null> {
-    return await this.budgetService.delete(budgetId);
+  async deleteItem(
+    @Param('id') id: string,
+    @GetUser() user: User,
+  ): Promise<Budget | null> {
+    return await this.budgetService.delete(id, user);
   }
 
   @Patch('/:id/name')
@@ -58,7 +62,8 @@ export class BudgetController {
   async updateName(
     @Param('id') id: string,
     @Body() request: UpdateBudgetNameDto,
+    @GetUser() user: User,
   ): Promise<void> {
-    return await this.budgetService.updateName(id, request.name);
+    return await this.budgetService.updateName(id, request.name, user);
   }
 }

@@ -35,52 +35,59 @@ describe('BudgetService', () => {
   });
 
   describe('getById', () => {
+    const user = makeUser({});
     it('should throw an exception if no budget exists with id', async () => {
-      await expect(service.getById('non-existent-id')).rejects.toThrow();
+      await expect(service.getById('non-existent-id', user)).rejects.toThrow();
     });
     it('should call repository getById method', async () => {
       const budget = makeBudget({});
       budgetRepository.getById.mockResolvedValue(budget);
-      await service.getById(budget.id);
+      await service.getById(budget.id, user);
 
-      expect(budgetRepository.getById).toHaveBeenCalledWith(budget.id);
+      expect(budgetRepository.getById).toHaveBeenCalledWith(budget.id, user);
     });
   });
 
   describe('delete', () => {
+    const user = makeUser({});
     it('should throw exception when budget with given id does not exist', async () => {
-      await expect(service.delete('non-existent')).rejects.toThrow();
+      await expect(service.delete('non-existent', user)).rejects.toThrow();
     });
     it('should call repository deleteBudget method', async () => {
       const createdBudget = makeBudget({});
       budgetRepository.deleteBudget.mockResolvedValue(createdBudget);
 
-      await service.delete(createdBudget.id);
+      await service.delete(createdBudget.id, user);
 
       expect(budgetRepository.deleteBudget).toHaveBeenCalledWith(
         createdBudget.id,
+        user,
       );
     });
   });
 
   describe('update name', () => {
+    const user = makeUser({});
     it('should call repository updateName', async () => {
       const budget = makeBudget({});
       const updateName = 'updatedBudget';
 
-      service.updateName(budget.id, updateName);
+      service.updateName(budget.id, updateName, user);
 
       expect(budgetRepository.updateName).toHaveBeenCalledWith(
         budget.id,
         updateName,
+        user,
       );
     });
   });
 
   describe('getBudgets', () => {
+    const user = makeUser({});
     it('should return empty array when there are no budgets', async () => {
       budgetRepository.getBudgets.mockResolvedValue([]);
-      const result = await service.getBudgets({});
+
+      const result = await service.getBudgets({}, user);
 
       expect(result).toStrictEqual([]);
       expect(budgetRepository.getBudgets).toHaveBeenCalledTimes(1);
@@ -89,7 +96,7 @@ describe('BudgetService', () => {
       const expectedBudgets = makeBudgets(3);
       budgetRepository.getBudgets.mockResolvedValue(expectedBudgets);
 
-      const result = await service.getBudgets({});
+      const result = await service.getBudgets({}, user);
 
       expect(result.length).toStrictEqual(3);
       expect(budgetRepository.getBudgets).toHaveBeenCalledTimes(1);
@@ -97,9 +104,9 @@ describe('BudgetService', () => {
     it('should call repository getBudgetsWithFilters with filterDto request', async () => {
       const filterDto = { name: 'Budget_02', search: '_02' };
 
-      await service.getBudgets(filterDto);
+      await service.getBudgets(filterDto, user);
 
-      expect(budgetRepository.getBudgets).toHaveBeenCalledWith(filterDto);
+      expect(budgetRepository.getBudgets).toHaveBeenCalledWith(filterDto, user);
     });
   });
 });
