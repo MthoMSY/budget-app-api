@@ -4,6 +4,7 @@ import { BudgetRepository } from '../../repository/budget-repository';
 import { Budget } from '../../entity/budget.entity';
 import { CreateBudgetDto } from '../../dto/create-budget.dto';
 import { v4 } from 'uuid';
+import { User } from 'src/auth/user.entity';
 
 describe('BudgetService', () => {
   const automocker = AutoMocker.createJestMocker(jest);
@@ -23,9 +24,10 @@ describe('BudgetService', () => {
   describe('create', () => {
     it('should create budget', async () => {
       const request = makeCreateBudgetDto({});
-      const expectedResponse = makeBudget(request);
+      const user = makeUser({});
+      const expectedResponse = makeBudget(request, user.id);
       budgetRepository.createBudget.mockResolvedValue(expectedResponse);
-      const result = await service.create(request);
+      const result = await service.create(request, user);
 
       expect(result).toBeDefined();
       expect(result).toEqual(expect.objectContaining({ ...expectedResponse }));
@@ -117,12 +119,16 @@ function makeBudgets(numberOfRequests: number): Budget[] {
   return budgets;
 }
 
-function makeBudget(request: Partial<CreateBudgetDto>): Budget {
+function makeBudget(
+  request: Partial<CreateBudgetDto>,
+  userId?: string,
+): Budget {
   return {
     name: request.name ?? `Budget`,
     description: request.description ?? `description`,
     createdAt: new Date(),
     id: v4(),
+    userId: userId ?? v4(),
   } as Budget;
 }
 
@@ -134,4 +140,13 @@ function makeCreateBudgetDto(
     description: request.description ?? `description`,
     items: [],
   };
+}
+
+function makeUser(request: Partial<User>): User {
+  return {
+    id: v4(),
+    username: request.username ?? `userName`,
+    password: request.password ?? `password`,
+    salt: 'salty',
+  } as User;
 }

@@ -3,6 +3,7 @@ import { Budget } from '../entity/budget.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GetBudgetFilterDto } from '../dto/get-budget-filter-dto';
 import { CreateBudgetDto } from '../dto/create-budget.dto';
+import { User } from 'src/auth/user.entity';
 
 export class BudgetRepository extends Repository<Budget> {
   constructor(
@@ -24,8 +25,8 @@ export class BudgetRepository extends Repository<Budget> {
     return await this.budgetRepository.find();
   }
 
-  async createBudget(Budget: CreateBudgetDto): Promise<Budget> {
-    return this.budgetRepository.save(Budget);
+  async createBudget(request: CreateBudgetDto, user: User): Promise<Budget> {
+    return this.budgetRepository.save({ ...request, userId: user.id });
   }
 
   async updateName(id: string, name: string): Promise<Budget | null> {

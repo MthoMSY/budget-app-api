@@ -3,6 +3,7 @@ import { CreateBudgetDto } from '../dto/create-budget.dto';
 import { BudgetRepository } from '../repository/budget-repository';
 import { Budget } from '../entity/budget.entity';
 import { GetBudgetFilterDto } from '../dto/get-budget-filter-dto';
+import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class BudgetService {
@@ -16,8 +17,8 @@ export class BudgetService {
     return result;
   }
 
-  async create(request: CreateBudgetDto): Promise<Budget> {
-    return this.budgetRepository.createBudget(request);
+  async create(request: CreateBudgetDto, user: User): Promise<Budget> {
+    return this.budgetRepository.createBudget(request, user);
   }
 
   async delete(id: string): Promise<Budget> {
