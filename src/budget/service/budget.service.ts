@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { CreateBudgetDto } from '../dto/create-budget.dto';
 import { BudgetRepository } from '../repository/budget-repository';
 import { Budget } from '../entity/budget.entity';
@@ -12,6 +12,7 @@ export class BudgetService {
   async getById(id: string, user: User): Promise<Budget> {
     const result = await this.budgetRepository.getById(id, user);
     if (!result) {
+      Logger.debug(`Get by id unsuccessful, id '${id}' does not exist`);
       throw new NotFoundException(`Budget with id: ${id} was not found`);
     }
     return result;
@@ -27,6 +28,8 @@ export class BudgetService {
     if (Budget) {
       return Budget;
     }
+
+    Logger.debug(`Delete budget unsuccessful, id '${id}' does not exist`);
 
     throw new NotFoundException(`Budget with id: ${id} was not found`);
   }
