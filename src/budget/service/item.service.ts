@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateItemDto } from '../dto/create-item.dto';
 import { GetItemFilterDto } from '../dto/get-item-filter-dto';
 import { Item } from '../entity/item.entity';
@@ -6,11 +6,13 @@ import { ItemRepository } from '../repository/item-repository';
 
 @Injectable()
 export class ItemService {
+  private logger = new Logger(ItemService.name);
   constructor(private readonly itemRepository: ItemRepository) {}
 
   async getById(id: string): Promise<Item> {
     const result = await this.itemRepository.getById(id);
     if (!result) {
+      this.logger.debug(`Delete failed, item with id '${id}' does not exist`);
       throw new NotFoundException(`Item with id: ${id} was not found`);
     }
     return result;
@@ -27,6 +29,7 @@ export class ItemService {
       return item;
     }
 
+    this.logger.debug(`Delete failed, item with id '${id}' does not exist`);
     throw new NotFoundException(`Item with id: ${id} was not found`);
   }
 

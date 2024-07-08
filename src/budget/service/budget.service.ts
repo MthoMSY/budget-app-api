@@ -7,12 +7,13 @@ import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class BudgetService {
+  private logger = new Logger(BudgetService.name);
   constructor(private readonly budgetRepository: BudgetRepository) {}
 
   async getById(id: string, user: User): Promise<Budget> {
     const result = await this.budgetRepository.getById(id, user);
     if (!result) {
-      Logger.debug(`Get by id unsuccessful, id '${id}' does not exist`);
+      this.logger.debug(`Get by id unsuccessful, id '${id}' does not exist`);
       throw new NotFoundException(`Budget with id: ${id} was not found`);
     }
     return result;
@@ -29,8 +30,7 @@ export class BudgetService {
       return Budget;
     }
 
-    Logger.debug(`Delete budget unsuccessful, id '${id}' does not exist`);
-
+    this.logger.debug(`Delete budget unsuccessful, id '${id}' does not exist`);
     throw new NotFoundException(`Budget with id: ${id} was not found`);
   }
 
