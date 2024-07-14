@@ -24,6 +24,7 @@ export class UserRepository extends Repository<User> {
   }
 
   async signUp(request: SignUpDto) {
+    this.logger.debug(`Sign up user with request: ${JSON.stringify(request)}`);
     try {
       const encryptionData = await this.hashPassword(request.password);
 
@@ -38,7 +39,7 @@ export class UserRepository extends Repository<User> {
           `User with username '${request.username}' already exists`,
         );
       }
-
+      this.logger.debug(`Error whilst signing up user: ${error.message}`);
       throw new InternalServerErrorException();
     }
   }

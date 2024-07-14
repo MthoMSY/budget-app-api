@@ -9,6 +9,8 @@ import {
 import * as encrypt from 'bcrypt';
 import { Budget } from '../budget/entity/budget.entity';
 
+// TODO: Add createdAt, email, updatedAt fields
+
 @Entity()
 @Unique(['username'])
 export class User extends BaseEntity {

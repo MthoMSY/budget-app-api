@@ -15,7 +15,9 @@ export class AuthService {
     await this.userRepository.signUp(request);
   }
 
-  async signIn(request: SignInDto): Promise<{ accessToken: string }> {
+  async signIn(
+    request: SignInDto,
+  ): Promise<{ username: string; accessToken: string }> {
     this.logger.log(`Received sign in request for user ${request.username}`);
     const username = await this.userRepository.validateUserPassword(request);
 
@@ -25,6 +27,6 @@ export class AuthService {
 
     const accessToken = this.jwtService.sign({ username });
 
-    return { accessToken };
+    return { username, accessToken };
   }
 }
