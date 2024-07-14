@@ -5,12 +5,14 @@ import { SignInDto, SignUpDto } from './dto/auth-credentials.dto';
 import {
   BadRequestException,
   InternalServerErrorException,
+  Logger,
 } from '@nestjs/common';
 import * as encrypt from 'bcrypt';
 
 const DUPLICATE_KEY_ERROR_CODE = '23505';
 
 export class UserRepository extends Repository<User> {
+  private logger = new Logger(UserRepository.name);
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {
@@ -50,12 +52,15 @@ export class UserRepository extends Repository<User> {
   }
 
   async validateUserPassword(credentials: SignInDto): Promise<string | null> {
+    this.logger.debug(
+      `Validating user password for user ${credentials.username}`,
+    );
     const { username, password } = credentials;
 
     const user = await this.findOne({ where: { username } });
-
-    if (user && user.validatePassword(password)) {
-      return user.username;
+    if (user) {
+      const isValidPassword = await user.isValidPassword(password);
+      return isValidPassword ? username : null;
     }
 
     return null;

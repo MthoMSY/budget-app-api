@@ -1,9 +1,9 @@
 import { JwtService } from '@nestjs/jwt';
-import { AuthService } from './auth.service';
-import { UserRepository } from './user.repository';
+import { AuthService } from '../auth.service';
+import { UserRepository } from '../user.repository';
 import { AutoMocker } from 'automocker';
 
-describe('AuthService', () => {
+describe(AuthService.name, () => {
   const automocker = AutoMocker.createJestMocker(jest);
   let service: AuthService;
   const userRepository = automocker.createMockInstance(UserRepository);

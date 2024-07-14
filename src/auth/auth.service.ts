@@ -1,10 +1,11 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { SignInDto, SignUpDto } from './dto/auth-credentials.dto';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
+  private logger = new Logger(AuthService.name);
   constructor(
     private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
@@ -15,6 +16,7 @@ export class AuthService {
   }
 
   async signIn(request: SignInDto): Promise<{ accessToken: string }> {
+    this.logger.log(`Received sign in request for user ${request.username}`);
     const username = await this.userRepository.validateUserPassword(request);
 
     if (!username) {
