@@ -30,6 +30,7 @@ export class UserRepository extends Repository<User> {
 
       await this.userRepository.save({
         ...request,
+        username: request.username.toLocaleLowerCase(),
         password: encryptionData.hash,
         salt: encryptionData.salt,
       });
@@ -52,16 +53,18 @@ export class UserRepository extends Repository<User> {
     return { hash: hashedPassword, salt };
   }
 
-  async validateUserPassword(credentials: SignInDto): Promise<string | null> {
+  async validateUserPassword(credentials: SignInDto): Promise<User | null> {
     this.logger.debug(
       `Validating user password for user ${credentials.username}`,
     );
-    const { username, password } = credentials;
+    const { password } = credentials;
+
+    const username = credentials.username.toLocaleLowerCase();
 
     const user = await this.findOne({ where: { username } });
     if (user) {
       const isValidPassword = await user.isValidPassword(password);
-      return isValidPassword ? username : null;
+      return isValidPassword ? user : null;
     }
 
     return null;

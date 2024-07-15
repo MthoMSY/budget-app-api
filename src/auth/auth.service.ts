@@ -17,16 +17,16 @@ export class AuthService {
 
   async signIn(
     request: SignInDto,
-  ): Promise<{ username: string; accessToken: string }> {
+  ): Promise<{ username: string; accessToken: string; userId: string }> {
     this.logger.log(`Received sign in request for user ${request.username}`);
-    const username = await this.userRepository.validateUserPassword(request);
+    const user = await this.userRepository.validateUserPassword(request);
 
-    if (!username) {
+    if (user === null) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const accessToken = this.jwtService.sign({ username });
+    const accessToken = this.jwtService.sign({ username: user.username });
 
-    return { username, accessToken };
+    return { username: user.username, accessToken, userId: user.id };
   }
 }
