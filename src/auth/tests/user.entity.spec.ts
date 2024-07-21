@@ -14,7 +14,7 @@ describe(User.name, () => {
       user.salt = salt;
       user.password = await encrypt.hash(myPassword, salt);
       const result = await user.isValidPassword(myPassword);
-      expect(result).toBe(false);
+      expect(result).toBe(true);
     });
     it('should return false when hashes do not match for password validation', async () => {
       const salt = await encrypt.genSalt();
