@@ -19,6 +19,7 @@ import { UpdateBudgetNameDto } from '../dto/update-budget-name.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../../auth/get-user.decorator';
 import { User } from '../../auth/user.entity';
+import { Item } from '../entity/item.entity';
 
 @Controller('budget')
 @UseGuards(AuthGuard())
@@ -39,6 +40,14 @@ export class BudgetController {
     @GetUser() user: User,
   ): Promise<Budget | null> {
     return await this.budgetService.getById(id, user);
+  }
+
+  @Get('/:id/items')
+  async getBudgetItems(
+    @Param('id') id: string,
+    @GetUser() user: User,
+  ): Promise<Item[]> {
+    return await this.budgetService.getBudgetItemsById(id, user);
   }
 
   @Post()

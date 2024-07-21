@@ -23,8 +23,22 @@ export class BudgetRepository extends Repository<Budget> {
     });
   }
 
+  async getByIdWithItems(id: string, user: User): Promise<Budget> {
+    return await this.budgetRepository.findOne({
+      where: { id, userId: user.id },
+      relations: {
+        items: true,
+      },
+    });
+  }
+
   private async getAll(userId: string): Promise<Budget[]> {
-    return await this.budgetRepository.find({ where: { userId } });
+    return await this.budgetRepository.find({
+      where: { userId },
+      relations: {
+        items: true,
+      },
+    });
   }
 
   async createBudget(request: CreateBudgetDto, user: User): Promise<Budget> {
@@ -75,18 +89,27 @@ export class BudgetRepository extends Repository<Budget> {
           name: Like(`%${filterDto.name}%`),
           description: Like(`%${filterDto.search}%`),
         },
+        relations: {
+          items: true,
+        },
       });
     }
 
     if (filterDto.name) {
       return await this.budgetRepository.find({
         where: { userId: user.id, name: Like(`%${filterDto.name}%`) },
+        relations: {
+          items: true,
+        },
       });
     }
 
     if (filterDto.search) {
       return await this.budgetRepository.find({
         where: { userId: user.id, description: Like(`%${filterDto.search}%`) },
+        relations: {
+          items: true,
+        },
       });
     }
 

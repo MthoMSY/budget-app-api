@@ -48,6 +48,25 @@ describe('BudgetService', () => {
     });
   });
 
+  describe('getBudgetItemsById', () => {
+    const user = makeUser({});
+    it('should throw an exception if no budget exists with id', async () => {
+      await expect(
+        service.getBudgetItemsById('non-existent-id', user),
+      ).rejects.toThrow();
+    });
+    it('should call repository getById method with correct arguments', async () => {
+      const budget = makeBudget({});
+      budgetRepository.getByIdWithItems.mockResolvedValue(budget);
+      await service.getBudgetItemsById(budget.id, user);
+
+      expect(budgetRepository.getByIdWithItems).toHaveBeenCalledWith(
+        budget.id,
+        user,
+      );
+    });
+  });
+
   describe('delete', () => {
     const user = makeUser({});
     it('should throw exception when budget with given id does not exist', async () => {

@@ -9,6 +9,8 @@ import {
 import * as encrypt from 'bcrypt';
 import { Budget } from '../budget/entity/budget.entity';
 
+// TODO: Add createdAt, email, updatedAt fields
+
 @Entity()
 @Unique(['username'])
 export class User extends BaseEntity {
@@ -24,7 +26,7 @@ export class User extends BaseEntity {
   @Column()
   salt: string;
 
-  async validatePassword(password: string): Promise<boolean> {
+  async isValidPassword(password: string): Promise<boolean> {
     const hash = await encrypt.hash(password, this.salt);
 
     return hash === this.password;
