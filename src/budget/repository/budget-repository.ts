@@ -3,7 +3,7 @@ import { Budget } from '../entity/budget.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GetBudgetFilterDto } from '../dto/get-budget-filter-dto';
 import { CreateBudgetDto } from '../dto/create-budget.dto';
-import { User } from 'src/auth/user.entity';
+import { User } from '../../auth/user.entity';
 
 export class BudgetRepository extends Repository<Budget> {
   constructor(

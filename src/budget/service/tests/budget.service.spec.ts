@@ -4,7 +4,7 @@ import { BudgetRepository } from '../../repository/budget-repository';
 import { Budget } from '../../entity/budget.entity';
 import { CreateBudgetDto } from '../../dto/create-budget.dto';
 import { v4 } from 'uuid';
-import { User } from 'src/auth/user.entity';
+import { User } from '../../../auth/user.entity';
 
 describe('BudgetService', () => {
   const automocker = AutoMocker.createJestMocker(jest);

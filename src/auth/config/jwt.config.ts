@@ -6,7 +6,7 @@ export class JwtConfig {
     return {
       secret: configService.getOrThrow('JWT_SECRET'),
       signOptions: {
-        expiresIn: configService.getOrThrow<number>(
+        expiresIn: configService.getOrThrow<string>(
           'JWT_TOKEN_EXPIRY_IN_SECONDS',
         ),
       },

@@ -1,19 +1,13 @@
 FROM node:20.9-alpine3.17
 
-RUN mkdir /sync
-WORKDIR /sync
+WORKDIR /app
 
-COPY package.json .
-COPY tsconfig.json .
-COPY tsconfig.build.json .
-COPY .env .
+COPY . .
 
-RUN yarn install
-
-COPY src ./src
+RUN yarn
 
 RUN yarn build
 
 EXPOSE 3000
 
-CMD [ "node", "dist/main.js"]
+CMD [ "yarn", "start:dev"]

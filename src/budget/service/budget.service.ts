@@ -3,7 +3,7 @@ import { CreateBudgetDto } from '../dto/create-budget.dto';
 import { BudgetRepository } from '../repository/budget-repository';
 import { Budget } from '../entity/budget.entity';
 import { GetBudgetFilterDto } from '../dto/get-budget-filter-dto';
-import { User } from 'src/auth/user.entity';
+import { User } from '../../auth/user.entity';
 import { Item } from '../entity/item.entity';
 
 @Injectable()

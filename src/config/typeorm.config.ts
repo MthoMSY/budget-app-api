@@ -14,7 +14,7 @@ export class TypeOrmConfig {
       password: configService.getOrThrow('DB_PASSWORD'),
       database: configService.getOrThrow('DB_NAME'),
       entities: [__dirname + '/../**/*.entity.js'],
-      synchronize: configService.get<boolean>('DB_SYNCHRONIZE'),
+      synchronize: configService.getOrThrow<boolean>('DB_SYNCHRONIZE'),
     };
 
     return config;
