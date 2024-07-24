@@ -1,4 +1,4 @@
-import { Logger, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { BudgetModule } from './budget/budget.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfigAsync } from './config/typeorm.config';
@@ -15,10 +15,5 @@ import { ConfigModule } from '@nestjs/config';
   ],
 })
 export class AppModule {
-  private logger = new Logger(AppModule.name);
-  constructor(private dataSource: DataSource) {
-    this.logger.debug(
-      `Our datasource looks like so: ${JSON.stringify(dataSource.options)}`,
-    );
-  }
+  constructor(private dataSource: DataSource) {}
 }
