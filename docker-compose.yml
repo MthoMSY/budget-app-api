@@ -4,6 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     image: bapp/api
+    command: yarn start:dev
     ports:
       - '3000:3000'
     container_name: bapp-api
@@ -11,12 +12,15 @@ services:
       db:
         condition: service_healthy
     env_file:
-      - .env
+      - ./.env
+    environment:
+      - DB_PORT=5432
+      - DB_HOST=db
     volumes:
       - ./src/:/app/src
-
+     
   db:
-    image: postgres:14.5
+    image: postgres:16.3-alpine3.20
     restart: always
     ports:
       - '3555:5432'
@@ -28,14 +32,15 @@ services:
       POSTGRES_DB: bapp
     
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d bapp"]
+      test: ["CMD-SHELL", "pg_isready"]
       interval: 30s
       timeout: 10s
-      retries: 10
+      retries: 15
       start_period: 30s
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - bappdb-pgdata:/var/lib/postgressql/data
+
 
 volumes:
-  pgdata:
+  bappdb-pgdata:
 
