@@ -1,10 +1,11 @@
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { IsDecimal, IsNotEmpty } from 'class-validator';
+import Decimal from 'decimal.js';
 
 export class CreateItemDto {
   @IsNotEmpty()
   name: string;
   @IsNotEmpty()
   description: string;
-  @IsNumber()
-  cost: number;
+  @IsDecimal()
+  cost: Decimal;
 }

@@ -17,6 +17,7 @@ import { CreateItemDto } from '../dto/create-item.dto';
 import { GetItemFilterDto } from '../dto/get-item-filter-dto';
 import { Item } from '../entity/item.entity';
 import { AuthGuard } from '@nestjs/passport';
+import { CreateBudgetItemDto } from '../dto/create-budget-item.dto';
 
 @Controller('item')
 @UseGuards(AuthGuard())
@@ -38,6 +39,12 @@ export class ItemController {
   @Post()
   @UsePipes(ValidationPipe)
   async createItem(@Body() request: CreateItemDto): Promise<Item> {
+    return await this.itemService.create(request);
+  }
+
+  @Post('/budget')
+  @UsePipes(ValidationPipe)
+  async createBudgetItem(@Body() request: CreateBudgetItemDto): Promise<Item> {
     return await this.itemService.create(request);
   }
 
