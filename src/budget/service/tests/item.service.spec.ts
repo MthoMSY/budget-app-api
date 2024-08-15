@@ -4,6 +4,7 @@ import { AutoMocker } from 'automocker';
 import { v4 } from 'uuid';
 import { CreateItemDto } from '../../dto/create-item.dto';
 import { Item } from '../../entity/item.entity';
+import Decimal from 'decimal.js';
 
 describe('ItemService', () => {
   const automocker = AutoMocker.createJestMocker(jest);
@@ -103,7 +104,7 @@ function makeItems(numberOfRequests: number): Item[] {
   const items: Item[] = [];
   for (let index = 0; index < numberOfRequests; index++) {
     items.push({
-      cost: index + 0.5,
+      cost: new Decimal(index.toString()).add(new Decimal('0.5')),
       name: `Item_${index + 1}`,
       description: `description`,
       createdAt: new Date(),
@@ -117,7 +118,7 @@ function makeItems(numberOfRequests: number): Item[] {
 
 function makeItem(request: Partial<CreateItemDto>): Item {
   return {
-    cost: request.cost ?? 25,
+    cost: request.cost ?? new Decimal('25.00'),
     name: request.name ?? `Item`,
     description: request.description ?? `description`,
     id: v4(),
@@ -127,7 +128,7 @@ function makeItem(request: Partial<CreateItemDto>): Item {
 
 function makeCreateItemDto(request: Partial<CreateItemDto>): CreateItemDto {
   return {
-    cost: request.cost ?? 25,
+    cost: request.cost ?? new Decimal('25.00'),
     name: request.name ?? `Item`,
     description: request.description ?? `description`,
   };
