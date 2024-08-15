@@ -16,8 +16,7 @@ jobs:
           node-version: 20.9.0
 
       - name: Install Dependencies
-      - run: npm i yarn -g
-      - run: yarn install:ci
+        run: npm i yarn -g && yarn install:ci
 
       - name: Build
         run: yarn build
