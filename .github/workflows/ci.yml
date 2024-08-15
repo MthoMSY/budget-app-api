@@ -1,0 +1,30 @@
+name: Continuous Integration Build
+on: 
+  push: 
+    branches: [main, develop]
+
+jobs: 
+  build:
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Checkout Repository
+        uses: actions/checkout@v4.1.7
+
+      - name: Setup Node Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.9.0
+
+      - name: Install Dependencies
+      - run: npm i yarn -g
+      - run: yarn install:ci
+
+      - name: Build
+        run: yarn build
+        
+      - name: Lint
+        run: yarn lint
+
+      - name: Test
+        run: yarn test:cov
+    
