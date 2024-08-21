@@ -22,7 +22,7 @@ describe(AuthService.name, () => {
 
   describe('signUp', () => {
     it('should call user repository sign up with correct arguments', async () => {
-      userRepository.validateUserPassword.mockResolvedValue(request.username);
+      userRepository.validateUserPassword.mockResolvedValue(request);
       await service.signUp(request);
 
       expect(userRepository.signUp).toHaveBeenCalledWith(request);
@@ -31,7 +31,7 @@ describe(AuthService.name, () => {
 
   describe('signIn', () => {
     it('should call user repository validateUserPassword with correct arguments and validate password', async () => {
-      userRepository.validateUserPassword.mockResolvedValue(request.username);
+      userRepository.validateUserPassword.mockResolvedValue(request);
       await service.signIn(request);
 
       expect(userRepository.validateUserPassword).toHaveBeenCalledWith(request);
@@ -42,6 +42,14 @@ describe(AuthService.name, () => {
 
       await expect(() => service.signIn(request)).rejects.toThrow();
     });
-    it.todo('should do jwt stuff');
+    it('should call jwt service sign method with correct username', async () => {
+      userRepository.validateUserPassword.mockResolvedValue(request);
+
+      await service.signIn(request);
+
+      expect(jwtService.sign).toHaveBeenCalledWith({
+        username: request.username,
+      });
+    });
   });
 });
