@@ -5,6 +5,7 @@ import { v4 } from 'uuid';
 import { CreateItemDto } from '../../dto/create-item.dto';
 import { Item } from '../../entity/item.entity';
 import Decimal from 'decimal.js';
+import { Category } from '../../entity/category.enum';
 
 describe('ItemService', () => {
   const automocker = AutoMocker.createJestMocker(jest);
@@ -121,6 +122,7 @@ function makeItem(request: Partial<CreateItemDto>): Item {
     cost: request.cost ?? new Decimal('25.00'),
     name: request.name ?? `Item`,
     description: request.description ?? `description`,
+    category: Category.BlackTax,
     id: v4(),
     createdAt: new Date(),
   } as Item;
@@ -131,5 +133,6 @@ function makeCreateItemDto(request: Partial<CreateItemDto>): CreateItemDto {
     cost: request.cost ?? new Decimal('25.00'),
     name: request.name ?? `Item`,
     description: request.description ?? `description`,
+    category: Category.BlackTax,
   };
 }

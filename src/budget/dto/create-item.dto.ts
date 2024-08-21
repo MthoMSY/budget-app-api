@@ -1,5 +1,6 @@
-import { IsDecimal, IsNotEmpty } from 'class-validator';
+import { IsDecimal, IsEnum, IsNotEmpty } from 'class-validator';
 import Decimal from 'decimal.js';
+import { Category } from '../entity/category.enum';
 
 export class CreateItemDto {
   @IsNotEmpty()
@@ -8,4 +9,6 @@ export class CreateItemDto {
   description: string;
   @IsDecimal()
   cost: Decimal;
+  @IsEnum(Category)
+  category: Category;
 }
