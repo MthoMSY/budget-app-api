@@ -59,7 +59,7 @@ export class BudgetController {
   }
 
   @Delete('/:id')
-  async deleteItem(
+  async deleteBudget(
     @Param('id') id: string,
     @GetUser() user: User,
   ): Promise<Budget | null> {

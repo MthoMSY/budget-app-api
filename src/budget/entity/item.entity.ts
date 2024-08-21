@@ -15,6 +15,7 @@ import {
 } from '../dto/decimal-transformer';
 import Decimal from 'decimal.js';
 import { Transform } from 'class-transformer';
+import { Category } from './category.enum';
 
 @Entity()
 export class Item extends BaseEntity {
@@ -38,6 +39,9 @@ export class Item extends BaseEntity {
 
   @Column()
   description: string;
+
+  @Column({ type: 'enum', enum: Category, default: Category.Miscellaneous })
+  category: Category;
 
   @CreateDateColumn()
   createdAt: Date;
