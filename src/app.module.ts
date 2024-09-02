@@ -6,10 +6,14 @@ import { DataSource } from 'typeorm';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 
+const Env = process.env.NODE_ENV;
+
 @Module({
   imports: [
     TypeOrmModule.forRootAsync(typeOrmConfigAsync),
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      envFilePath: !Env ? `.env.development` : `.env.${Env}`,
+    }),
     BudgetModule,
     AuthModule,
   ],
