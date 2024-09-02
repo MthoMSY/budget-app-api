@@ -7,6 +7,8 @@
   "license": "UNLICENSED",
   "scripts": {
     "typeorm": "npx typeorm-ts-node-commonjs",
+    "run:migrations:dev": "NODE_ENV=development npm run typeorm  migration:run --  -d src/data/source.ts",
+    "run:migrations:prod": "NODE_ENV=production npm run typeorm  migration:run --  -d src/data/source.ts",
     "install:ci": "yarn --frozen-lockfile",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
