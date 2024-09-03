@@ -7,8 +7,8 @@
   "license": "UNLICENSED",
   "scripts": {
     "typeorm": "npx typeorm-ts-node-commonjs",
-    "run:migrations:dev": "NODE_ENV=development npm run typeorm  migration:run --  -d src/data/source.ts",
-    "run:migrations:prod": "NODE_ENV=production npm run typeorm  migration:run --  -d src/data/source.ts",
+    "migrations:dev": "NODE_ENV=development npm run typeorm  migration:run --  -d src/data/source.ts",
+    "migrations:prod": "NODE_ENV=production npm run typeorm  migration:run --  -d src/data/source.ts",
     "install:ci": "yarn --frozen-lockfile",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -21,7 +21,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage --coverageProvider=v8",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "heroku-postbuild": "yarn run migrations:prod"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
