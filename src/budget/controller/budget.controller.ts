@@ -20,8 +20,9 @@ import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../../auth/get-user.decorator';
 import { User } from '../../auth/user.entity';
 import { Item } from '../entity/item.entity';
+import { ApiVersion } from 'src/common/api-version.enum';
 
-@Controller('budget')
+@Controller(`${ApiVersion.V1}/budget`)
 @UseGuards(AuthGuard())
 export class BudgetController {
   constructor(private readonly budgetService: BudgetService) {}

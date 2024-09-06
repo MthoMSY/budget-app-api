@@ -1,8 +1,9 @@
 import { Body, Controller, Post, ValidationPipe } from '@nestjs/common';
 import { SignInDto, SignUpDto } from './dto/auth-credentials.dto';
 import { AuthService } from './auth.service';
+import { ApiVersion } from 'src/common/api-version.enum';
 
-@Controller('auth')
+@Controller(`${ApiVersion.V1}/auth`)
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
   @Post('/signup')
