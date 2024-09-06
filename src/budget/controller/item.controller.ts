@@ -18,8 +18,9 @@ import { GetItemFilterDto } from '../dto/get-item-filter-dto';
 import { Item } from '../entity/item.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateBudgetItemDto } from '../dto/create-budget-item.dto';
+import { ApiVersion } from 'src/common/api-version.enum';
 
-@Controller('item')
+@Controller(`${ApiVersion.V1}/item`)
 @UseGuards(AuthGuard())
 export class ItemController {
   constructor(private readonly itemService: ItemService) {}
