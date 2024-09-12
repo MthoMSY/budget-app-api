@@ -73,6 +73,6 @@ export class CreateItemTable1725298831183 implements MigrationInterface {
     });
 
     await queryRunner.dropForeignKey(tableName, foreignKey);
-    await queryRunner.dropTable(tableName);
+    await queryRunner.dropTable(tableName, true);
   }
 }

@@ -11,6 +11,12 @@ import {
 } from 'typeorm';
 import { Item } from './item.entity';
 import { User } from '../../auth/user.entity';
+import {
+  DecimalToString,
+  DecimalTransformer,
+} from '../dto/decimal-transformer';
+import Decimal from 'decimal.js';
+import { Transform } from 'class-transformer';
 
 @Entity()
 export class Budget extends BaseEntity {
@@ -31,6 +37,15 @@ export class Budget extends BaseEntity {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    transformer: new DecimalTransformer(),
+  })
+  @Transform(({ value }) => DecimalToString(value), { toPlainOnly: true })
+  limit: Decimal;
 
   @OneToMany(() => Item, (item) => item.budget)
   items: Item[];

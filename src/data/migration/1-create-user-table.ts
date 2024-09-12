@@ -25,9 +25,10 @@ export class CreateUserTable1725298800463 implements MigrationInterface {
           },
         ],
       }),
+      true,
     );
   }
   async down(queryRunner: QueryRunner): Promise<any> {
-    await queryRunner.dropTable(tableName);
+    await queryRunner.dropTable(tableName, true);
   }
 }
