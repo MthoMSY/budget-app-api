@@ -7,7 +7,7 @@ export class UpdateBudgetDto {
   @IsNotEmpty()
   description: string;
   @IsNotEmpty()
-  limit: Decimal;
+  limit?: Decimal;
   @IsNotEmpty()
   id: string;
 }
