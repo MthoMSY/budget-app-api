@@ -21,6 +21,7 @@ import { GetUser } from '../../auth/get-user.decorator';
 import { User } from '../../auth/user.entity';
 import { Item } from '../entity/item.entity';
 import { ApiVersion } from 'src/common/api-version.enum';
+import { UpdateBudgetDto } from '../dto/update-budget-dto';
 
 @Controller(`${ApiVersion.V1}/budget`)
 @UseGuards(AuthGuard())
@@ -72,6 +73,16 @@ export class BudgetController {
   async updateName(
     @Param('id') id: string,
     @Body() request: UpdateBudgetNameDto,
+    @GetUser() user: User,
+  ): Promise<void> {
+    return await this.budgetService.updateName(id, request.name, user);
+  }
+
+  @Patch('/:id/')
+  @UsePipes(ValidationPipe)
+  async updateBudget(
+    @Param('id') id: string,
+    @Body() request: UpdateBudgetDto,
     @GetUser() user: User,
   ): Promise<void> {
     return await this.budgetService.updateName(id, request.name, user);

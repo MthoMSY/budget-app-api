@@ -101,6 +101,21 @@ describe('BudgetService', () => {
     });
   });
 
+  describe('update budget', () => {
+    const user = makeUser({});
+    it('should call repository updateBudget', async () => {
+      const budget = makeBudget({});
+      const updateName = 'updatedBudget';
+
+      service.updateBudget(budget, user);
+
+      expect(budgetRepository.updateBudget).toHaveBeenCalledWith(
+        budget,
+        user,
+      );
+    });
+  });
+
   describe('getBudgets', () => {
     const user = makeUser({});
     it('should return empty array when there are no budgets', async () => {

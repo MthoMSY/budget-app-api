@@ -59,10 +59,31 @@ export class BudgetRepository extends Repository<Budget> {
     }
 
     found.name = name;
+    found.updatedAt = new Date();
 
     this.update(id, found);
 
     return found;
+  }
+
+  async updateBudget(
+    id: string,
+    budget: Budget,
+    user: User,
+  ): Promise<Budget | null> {
+    const found = await this.budgetRepository.findOne({
+      where: { id, userId: user.id },
+    });
+
+    if (!found) {
+      return null;
+    }
+
+    const update = {id, ...budget}
+
+    this.update(found.id, budget);
+
+    return budget;
   }
 
   async deleteBudget(id: string, user: User): Promise<Budget | null> {
