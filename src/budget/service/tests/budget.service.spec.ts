@@ -91,11 +91,26 @@ describe('BudgetService', () => {
       const budget = makeBudget({});
       const updateName = 'updatedBudget';
 
-      service.updateName(budget.id, updateName, user);
+      await service.updateName(budget.id, updateName, user);
 
       expect(budgetRepository.updateName).toHaveBeenCalledWith(
         budget.id,
         updateName,
+        user,
+      );
+    });
+  });
+
+  describe('update budget', () => {
+    const user = makeUser({});
+    it('should call repository updateBudget', async () => {
+      const budget = makeBudget({});
+
+      await service.updateBudget(budget.id, budget, user);
+
+      expect(budgetRepository.updateBudget).toHaveBeenCalledWith(
+        budget.id,
+        budget,
         user,
       );
     });

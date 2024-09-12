@@ -43,6 +43,7 @@ export class CreateBudgetTable1725298814487 implements MigrationInterface {
           },
         ],
       }),
+      true,
     );
 
     await queryRunner.createForeignKey(
@@ -62,6 +63,6 @@ export class CreateBudgetTable1725298814487 implements MigrationInterface {
     });
 
     await queryRunner.dropForeignKey(tableName, foreignKey);
-    await queryRunner.dropTable(tableName);
+    await queryRunner.dropTable(tableName, true);
   }
 }

@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { GetBudgetFilterDto } from '../dto/get-budget-filter-dto';
 import { CreateBudgetDto } from '../dto/create-budget.dto';
 import { User } from '../../auth/user.entity';
+import { UpdateBudgetDto } from '../dto/update-budget-dto';
 
 export class BudgetRepository extends Repository<Budget> {
   constructor(
@@ -59,10 +60,37 @@ export class BudgetRepository extends Repository<Budget> {
     }
 
     found.name = name;
+    found.updatedAt = new Date();
 
     this.update(id, found);
 
     return found;
+  }
+
+  async updateBudget(
+    id: string,
+    budget: UpdateBudgetDto,
+    user: User,
+  ): Promise<Budget | null> {
+    const found = await this.budgetRepository.findOne({
+      where: { id, userId: user.id },
+    });
+
+    if (!found) {
+      return null;
+    }
+
+    const update = {
+      ...found,
+      updatedAt: new Date(),
+      name: budget.name,
+      description: budget.description,
+      limit: budget.limit,
+    } as Budget;
+
+    this.update(found.id, budget);
+
+    return update;
   }
 
   async deleteBudget(id: string, user: User): Promise<Budget | null> {

@@ -49,6 +49,11 @@ export class BudgetService {
     await this.budgetRepository.updateName(id, name, user);
   }
 
+  async updateBudget(id: string, budget: Budget, user: User): Promise<void> {
+    budget.updatedAt = new Date();
+    await this.budgetRepository.updateBudget(id, budget, user);
+  }
+
   async getBudgets(
     filterDto: GetBudgetFilterDto,
     user: User,

@@ -24,7 +24,6 @@ export class UserRepository extends Repository<User> {
   }
 
   async signUp(request: SignUpDto) {
-    this.logger.debug(`Sign up user with request: ${JSON.stringify(request)}`);
     try {
       const encryptionData = await this.hashPassword(request.password);
 
