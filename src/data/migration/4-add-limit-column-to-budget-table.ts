@@ -10,7 +10,7 @@ export class AddLimitColumnToBudgetTable1726143211390
       new TableColumn({
         name: 'limit',
         type: 'varchar',
-        default: '0.0',
+        default: 0,
       }),
     );
   }
