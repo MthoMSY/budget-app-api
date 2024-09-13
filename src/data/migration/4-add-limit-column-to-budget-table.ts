@@ -11,6 +11,7 @@ export class AddLimitColumnToBudgetTable1726143211390
         name: 'limit',
         type: 'varchar',
         isNullable: true,
+        default: null,
       }),
     );
   }
