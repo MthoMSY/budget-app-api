@@ -39,13 +39,15 @@ export class Budget extends BaseEntity {
   updatedAt: Date;
 
   @Column({
+    nullable: false,
+    default: new Decimal('0.0'),
     type: 'decimal',
     precision: 10,
     scale: 2,
     transformer: new DecimalTransformer(),
   })
   @Transform(({ value }) => DecimalToString(value), { toPlainOnly: true })
-  limit?: Decimal;
+  limit: Decimal;
 
   @OneToMany(() => Item, (item) => item.budget)
   items: Item[];
