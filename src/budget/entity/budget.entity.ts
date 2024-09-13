@@ -40,7 +40,7 @@ export class Budget extends BaseEntity {
 
   @Column({
     nullable: false,
-    default: new Decimal('0.0'),
+    default: 0,
     type: 'decimal',
     precision: 10,
     scale: 2,
