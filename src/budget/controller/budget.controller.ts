@@ -78,13 +78,13 @@ export class BudgetController {
     return await this.budgetService.updateName(id, request.name, user);
   }
 
-  @Patch('/:id/')
+  @Patch('/:id')
   @UsePipes(ValidationPipe)
   async updateBudget(
     @Param('id') id: string,
     @Body() request: UpdateBudgetDto,
     @GetUser() user: User,
   ): Promise<void> {
-    return await this.budgetService.updateName(id, request.name, user);
+    return await this.budgetService.updateBudget(id, request, user);
   }
 }

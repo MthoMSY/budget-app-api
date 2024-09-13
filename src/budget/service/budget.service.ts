@@ -5,6 +5,7 @@ import { Budget } from '../entity/budget.entity';
 import { GetBudgetFilterDto } from '../dto/get-budget-filter-dto';
 import { User } from '../../auth/user.entity';
 import { Item } from '../entity/item.entity';
+import { UpdateBudgetDto } from '../dto/update-budget-dto';
 
 @Injectable()
 export class BudgetService {
@@ -49,9 +50,12 @@ export class BudgetService {
     await this.budgetRepository.updateName(id, name, user);
   }
 
-  async updateBudget(id: string, budget: Budget, user: User): Promise<void> {
-    budget.updatedAt = new Date();
-    await this.budgetRepository.updateBudget(id, budget, user);
+  async updateBudget(
+    id: string,
+    request: UpdateBudgetDto,
+    user: User,
+  ): Promise<void> {
+    await this.budgetRepository.updateBudget(id, request, user);
   }
 
   async getBudgets(
