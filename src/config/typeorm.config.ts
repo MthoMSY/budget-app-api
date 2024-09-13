@@ -17,8 +17,6 @@ export class TypeOrmConfig {
       synchronize: configService.getOrThrow<boolean>('DB_SYNCHRONIZE'),
     };
 
-    console.log(config)
-
     return config;
   }
 }
