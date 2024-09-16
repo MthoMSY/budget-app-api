@@ -5,6 +5,7 @@ import { Budget } from '../../entity/budget.entity';
 import { CreateBudgetDto } from '../../dto/create-budget.dto';
 import { v4 } from 'uuid';
 import { User } from '../../../auth/user.entity';
+import Decimal from 'decimal.js';
 
 describe('BudgetService', () => {
   const automocker = AutoMocker.createJestMocker(jest);
@@ -177,6 +178,7 @@ function makeCreateBudgetDto(
   request: Partial<CreateBudgetDto>,
 ): CreateBudgetDto {
   return {
+    limit: request.limit ?? new Decimal(100),
     name: request.name ?? `Budget`,
     description: request.description ?? `description`,
     items: [],

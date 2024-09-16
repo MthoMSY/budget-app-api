@@ -24,3 +24,5 @@ export class SignInDto {
   @IsString()
   password: string;
 }
+
+export class ResetPasswordDto extends SignUpDto {}

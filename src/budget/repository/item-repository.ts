@@ -1,8 +1,8 @@
 import { Item } from '../entity/item.entity';
-import { CreateItemDto } from '../dto/create-item.dto';
 import { GetItemFilterDto } from '../dto/get-item-filter-dto';
 import { Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CreateBudgetItemDto } from '../dto/create-budget-item.dto';
 
 export class ItemRepository extends Repository<Item> {
   constructor(
@@ -15,7 +15,7 @@ export class ItemRepository extends Repository<Item> {
       itemRepository.queryRunner,
     );
   }
-  async getById(id: string): Promise<Item> {
+  async getById(id: string): Promise<Item | null> {
     return await this.itemRepository.findOne({ where: { id } });
   }
 
@@ -23,7 +23,7 @@ export class ItemRepository extends Repository<Item> {
     return await this.itemRepository.find();
   }
 
-  async createItem(item: CreateItemDto): Promise<Item> {
+  async createItem(item: CreateBudgetItemDto): Promise<Item> {
     return this.itemRepository.save(item);
   }
 

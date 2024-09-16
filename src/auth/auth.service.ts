@@ -1,6 +1,15 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserRepository } from './user.repository';
-import { SignInDto, SignUpDto } from './dto/auth-credentials.dto';
+import {
+  ResetPasswordDto,
+  SignInDto,
+  SignUpDto,
+} from './dto/auth-credentials.dto';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -28,5 +37,12 @@ export class AuthService {
     const accessToken = this.jwtService.sign({ username: user.username });
 
     return { username: user.username, accessToken, userId: user.id };
+  }
+
+  async resetPassword(request: ResetPasswordDto): Promise<void> {
+    const user = await this.userRepository.resetPassword(request);
+    if (user === null) {
+      throw new NotFoundException('User not found');
+    }
   }
 }

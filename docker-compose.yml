@@ -21,7 +21,6 @@ services:
     restart: always
     ports:
       - '3555:5432'
-    user: postgres
     container_name: bapp-db
     environment:
       POSTGRES_USER: postgres

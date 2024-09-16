@@ -1,8 +1,9 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { CreateItemDto } from '../dto/create-item.dto';
 import { GetItemFilterDto } from '../dto/get-item-filter-dto';
 import { Item } from '../entity/item.entity';
 import { ItemRepository } from '../repository/item-repository';
+import { CreateBudgetItemDto } from '../dto/create-budget-item.dto';
+import { UpdateBudgetItemDto } from '../dto/update-budget-item.dto';
 
 @Injectable()
 export class ItemService {
@@ -18,7 +19,7 @@ export class ItemService {
     return result;
   }
 
-  async create(request: CreateItemDto): Promise<Item> {
+  async create(request: CreateBudgetItemDto): Promise<Item> {
     return this.itemRepository.createItem(request);
   }
 
@@ -39,5 +40,27 @@ export class ItemService {
 
   async getItems(filterDto: GetItemFilterDto): Promise<Item[]> {
     return this.itemRepository.getItems(filterDto);
+  }
+
+  async updateBudgetItem(
+    id: string,
+    updateBudgetItemDto: UpdateBudgetItemDto,
+  ): Promise<Item> {
+    const item = await this.getById(id);
+    if (!item) {
+      throw new NotFoundException(`Item with ID "${id}" not found`);
+    }
+
+    if (updateBudgetItemDto.name) {
+      item.name = updateBudgetItemDto.name;
+    }
+    if (updateBudgetItemDto.cost !== undefined) {
+      item.cost = updateBudgetItemDto.cost;
+    }
+    if (updateBudgetItemDto.category) {
+      item.category = updateBudgetItemDto.category;
+    }
+
+    return await this.itemRepository.save(item);
   }
 }
