@@ -7,7 +7,6 @@ import { Item } from '../../entity/item.entity';
 import Decimal from 'decimal.js';
 import { Category } from '../../entity/category.enum';
 import { UpdateBudgetItemDto } from 'src/budget/dto/update-budget-item.dto';
-import { share } from 'rxjs';
 
 describe('ItemService', () => {
   const automocker = AutoMocker.createJestMocker(jest);

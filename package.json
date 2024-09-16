@@ -18,7 +18,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "NODE_ENV=production node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
+    "test": "NODE_ENV=test jest",
     "test:integration": "jest --config jest.integration.config.json --runInBand",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage --coverageProvider=v8",
