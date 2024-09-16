@@ -6,6 +6,8 @@ import { CreateBudgetItemDto } from '../../dto/create-budget-item.dto';
 import { Item } from '../../entity/item.entity';
 import Decimal from 'decimal.js';
 import { Category } from '../../entity/category.enum';
+import { UpdateBudgetItemDto } from 'src/budget/dto/update-budget-item.dto';
+import { share } from 'rxjs';
 
 describe('ItemService', () => {
   const automocker = AutoMocker.createJestMocker(jest);
@@ -99,7 +101,63 @@ describe('ItemService', () => {
       expect(itemRepository.getItems).toHaveBeenCalledWith(filterDto);
     });
   });
+
+  describe('updateBudgetItem', () => {
+    it('should throw exception when item with given id does not exist', async () => {
+      const nonExistentId = v4();
+      const updateBudgetItemDto = makeUpdateBudgetItemDto({});
+      await expect(
+        service.updateBudgetItem(nonExistentId, updateBudgetItemDto),
+      ).rejects.toThrow();
+    });
+    it('should call repository save', async () => {
+      const budgetId = v4();
+      const item = makeItem({ budgetId });
+      const updateBudgetItemDto = makeUpdateBudgetItemDto({ budgetId });
+
+      itemRepository.save.mockResolvedValue(item);
+      itemRepository.getById.mockResolvedValue(item);
+
+      await service.updateBudgetItem(item.id, updateBudgetItemDto);
+      expect(itemRepository.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: item.id,
+          ...updateBudgetItemDto,
+        }),
+      );
+    });
+    it('should update item name', async () => {
+      const item = makeItem({});
+      const updateBudgetItemDto = makeUpdateBudgetItemDto({});
+
+      itemRepository.save.mockResolvedValue(item);
+      itemRepository.getById.mockResolvedValue(item);
+
+      await service.updateBudgetItem(item.id, updateBudgetItemDto);
+    });
+    it('should update item cost', async () => {
+      const item = makeItem({});
+      const updateBudgetItemDto = makeUpdateBudgetItemDto({});
+
+      itemRepository.save.mockResolvedValue(item);
+      itemRepository.getById.mockResolvedValue(item);
+
+      await service.updateBudgetItem(item.id, updateBudgetItemDto);
+    });
+  });
 });
+
+function makeUpdateBudgetItemDto(
+  request: Partial<UpdateBudgetItemDto>,
+): UpdateBudgetItemDto {
+  return {
+    cost: request.cost ?? new Decimal('25.00'),
+    name: request.name ?? `Item`,
+    description: request.description ?? `description`,
+    category: Category.BlackTax,
+    budgetId: request.budgetId ?? v4(),
+  };
+}
 
 function makeItems(numberOfRequests: number): Item[] {
   const items: Item[] = [];
