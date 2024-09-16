@@ -52,4 +52,17 @@ describe(AuthService.name, () => {
       });
     });
   });
+
+  describe('resetPassword', () => {
+    it('should call user repository resetPassword with correct arguments', async () => {
+      await service.resetPassword(request);
+
+      expect(userRepository.resetPassword).toHaveBeenCalledWith(request);
+    });
+    it('should throw exception if value returned by repository is null', async () => {
+      userRepository.resetPassword.mockResolvedValue(null);
+
+      await expect(() => service.resetPassword(request)).rejects.toThrow();
+    });
+  });
 });

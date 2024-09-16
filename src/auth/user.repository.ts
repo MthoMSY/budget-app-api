@@ -1,7 +1,11 @@
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { SignInDto, SignUpDto } from './dto/auth-credentials.dto';
+import {
+  ResetPasswordDto,
+  SignInDto,
+  SignUpDto,
+} from './dto/auth-credentials.dto';
 import {
   BadRequestException,
   InternalServerErrorException,
@@ -67,5 +71,20 @@ export class UserRepository extends Repository<User> {
     }
 
     return null;
+  }
+
+  async resetPassword(request: ResetPasswordDto): Promise<User | null> {
+    const { password, username } = request;
+
+    const user = await this.findOne({ where: { username } });
+    if (user) {
+      const encryptionData = await this.hashPassword(password);
+      await this.update(user.id, {
+        password: encryptionData.hash,
+        salt: encryptionData.salt,
+      });
+    }
+
+    return user;
   }
 }
