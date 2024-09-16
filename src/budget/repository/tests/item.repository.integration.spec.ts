@@ -2,17 +2,18 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { DataSource } from 'typeorm';
-import { ItemRepository } from '../repository/item-repository';
-import { Item } from '../entity/item.entity';
-import { User } from '../../auth/user.entity';
-import { Budget } from '../entity/budget.entity';
-import { GetItemFilterDto } from '../dto/get-item-filter-dto';
+import { ItemRepository } from '../item-repository';
+import { Item } from '../../entity/item.entity';
+import { User } from '../../../auth/user.entity';
+import { Budget } from '../../entity/budget.entity';
+import { GetItemFilterDto } from '../../dto/get-item-filter-dto';
 import Decimal from 'decimal.js';
-import { Category } from '../entity/category.enum';
-import { CreateBudgetItemDto } from '../dto/create-budget-item.dto';
-import { UserRepository } from '../../auth/user.repository';
-import { BudgetRepository } from '../repository/budget-repository';
+import { Category } from '../../entity/category.enum';
+import { CreateBudgetItemDto } from '../../dto/create-budget-item.dto';
+import { UserRepository } from '../../../auth/user.repository';
+import { BudgetRepository } from '../budget-repository';
 import { v4 } from 'uuid';
+import { dropTables } from '../../../test__utils/utils';
 describe('ItemRepository', () => {
   let itemRepository: ItemRepository;
   let userRepository: UserRepository;
@@ -49,9 +50,7 @@ describe('ItemRepository', () => {
     userRepository = module.get<UserRepository>(UserRepository);
     budgetRepository = module.get<BudgetRepository>(BudgetRepository);
     // Drop and recreate tables
-    await dataSource.query('DROP TABLE IF EXISTS item CASCADE');
-    await dataSource.query('DROP TABLE IF EXISTS budget CASCADE');
-    await dataSource.query('DROP TABLE IF EXISTS "user" CASCADE');
+    await dropTables(dataSource);
     await dataSource.synchronize();
 
     user = new User();
@@ -68,6 +67,7 @@ describe('ItemRepository', () => {
   });
 
   afterAll(async () => {
+    await dropTables(dataSource);
     await dataSource.destroy();
   });
 

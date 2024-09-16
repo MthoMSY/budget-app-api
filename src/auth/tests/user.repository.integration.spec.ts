@@ -12,6 +12,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Budget } from '../../budget/entity/budget.entity';
 import { Item } from '../../budget/entity/item.entity';
 import { DataSource } from 'typeorm';
+import { dropTables } from '../../test__utils/utils';
 
 describe(UserRepository.name, () => {
   let userRepository: UserRepository;
@@ -48,10 +49,12 @@ describe(UserRepository.name, () => {
     await dataSource.query('DROP TABLE IF EXISTS "item" CASCADE');
 
     // Recreate tables
+    await dropTables(dataSource);
     await dataSource.synchronize();
   });
 
   afterAll(async () => {
+    await dropTables(dataSource);
     await dataSource.destroy();
   });
 

@@ -101,7 +101,8 @@ export class BudgetRepository extends Repository<Budget> {
     if (!found) {
       return null;
     }
-    this.delete(id);
+
+    await this.delete(id);
 
     return found;
   }
