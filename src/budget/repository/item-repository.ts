@@ -1,5 +1,4 @@
 import { Item } from '../entity/item.entity';
-import { CreateItemDto } from '../dto/create-item.dto';
 import { GetItemFilterDto } from '../dto/get-item-filter-dto';
 import { Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
