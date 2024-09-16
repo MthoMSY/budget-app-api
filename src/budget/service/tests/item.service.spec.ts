@@ -2,7 +2,7 @@ import { ItemService } from '../item.service';
 import { ItemRepository } from '../../repository/item-repository';
 import { AutoMocker } from 'automocker';
 import { v4 } from 'uuid';
-import { CreateItemDto } from '../../dto/create-item.dto';
+import { CreateBudgetItemDto } from '../../dto/create-budget-item.dto';
 import { Item } from '../../entity/item.entity';
 import Decimal from 'decimal.js';
 import { Category } from '../../entity/category.enum';
@@ -117,7 +117,7 @@ function makeItems(numberOfRequests: number): Item[] {
   return items;
 }
 
-function makeItem(request: Partial<CreateItemDto>): Item {
+function makeItem(request: Partial<CreateBudgetItemDto>): Item {
   return {
     cost: request.cost ?? new Decimal('25.00'),
     name: request.name ?? `Item`,
@@ -125,11 +125,15 @@ function makeItem(request: Partial<CreateItemDto>): Item {
     category: Category.BlackTax,
     id: v4(),
     createdAt: new Date(),
+    budgetId: request.budgetId ?? v4(),
   } as Item;
 }
 
-function makeCreateItemDto(request: Partial<CreateItemDto>): CreateItemDto {
+function makeCreateItemDto(
+  request: Partial<CreateBudgetItemDto>,
+): CreateBudgetItemDto {
   return {
+    budgetId: request.budgetId ?? v4(),
     cost: request.cost ?? new Decimal('25.00'),
     name: request.name ?? `Item`,
     description: request.description ?? `description`,

@@ -13,7 +13,6 @@ import {
 } from '@nestjs/common';
 import { ItemService } from '../service/item.service';
 import { UpdateItemNameDto } from '../dto/update-item-name.dto';
-import { CreateItemDto } from '../dto/create-item.dto';
 import { GetItemFilterDto } from '../dto/get-item-filter-dto';
 import { Item } from '../entity/item.entity';
 import { AuthGuard } from '@nestjs/passport';
@@ -39,7 +38,7 @@ export class ItemController {
 
   @Post()
   @UsePipes(ValidationPipe)
-  async createItem(@Body() request: CreateItemDto): Promise<Item> {
+  async createItem(@Body() request: CreateBudgetItemDto): Promise<Item> {
     return await this.itemService.create(request);
   }
 

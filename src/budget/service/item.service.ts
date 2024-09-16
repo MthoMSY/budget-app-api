@@ -3,6 +3,7 @@ import { CreateItemDto } from '../dto/create-item.dto';
 import { GetItemFilterDto } from '../dto/get-item-filter-dto';
 import { Item } from '../entity/item.entity';
 import { ItemRepository } from '../repository/item-repository';
+import { CreateBudgetItemDto } from '../dto/create-budget-item.dto';
 
 @Injectable()
 export class ItemService {
@@ -18,7 +19,7 @@ export class ItemService {
     return result;
   }
 
-  async create(request: CreateItemDto): Promise<Item> {
+  async create(request: CreateBudgetItemDto): Promise<Item> {
     return this.itemRepository.createItem(request);
   }
 

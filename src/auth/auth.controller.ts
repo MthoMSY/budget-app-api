@@ -1,5 +1,9 @@
 import { Body, Controller, Post, ValidationPipe } from '@nestjs/common';
-import { ResetPasswordDto, SignInDto, SignUpDto } from './dto/auth-credentials.dto';
+import {
+  ResetPasswordDto,
+  SignInDto,
+  SignUpDto,
+} from './dto/auth-credentials.dto';
 import { AuthService } from './auth.service';
 import { ApiVersion } from 'src/common/api-version.enum';
 
