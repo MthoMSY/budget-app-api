@@ -51,15 +51,10 @@ export class ItemService {
       throw new NotFoundException(`Item with ID "${id}" not found`);
     }
 
-    if (updateBudgetItemDto.name) {
-      item.name = updateBudgetItemDto.name;
-    }
-    if (updateBudgetItemDto.cost !== undefined) {
-      item.cost = updateBudgetItemDto.cost;
-    }
-    if (updateBudgetItemDto.category) {
-      item.category = updateBudgetItemDto.category;
-    }
+    item.name = updateBudgetItemDto.name || item.name;
+    item.cost = updateBudgetItemDto.cost || item.cost;
+    item.category = updateBudgetItemDto.category || item.category;
+    item.description = updateBudgetItemDto.description || item.description;
 
     return await this.itemRepository.save(item);
   }
