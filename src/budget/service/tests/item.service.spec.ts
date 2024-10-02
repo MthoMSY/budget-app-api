@@ -2,11 +2,12 @@ import { ItemService } from '../item.service';
 import { ItemRepository } from '../../repository/item-repository';
 import { AutoMocker } from 'automocker';
 import { v4 } from 'uuid';
-import { CreateBudgetItemDto } from '../../dto/create-budget-item.dto';
-import { Item } from '../../entity/item.entity';
-import Decimal from 'decimal.js';
-import { Category } from '../../entity/category.enum';
-import { UpdateBudgetItemDto } from 'src/budget/dto/update-budget-item.dto';
+import {
+  makeCreateItemDto,
+  makeItem,
+  makeItems,
+  makeUpdateBudgetItemDto,
+} from './utils';
 
 describe('ItemService', () => {
   const automocker = AutoMocker.createJestMocker(jest);
@@ -145,55 +146,3 @@ describe('ItemService', () => {
     });
   });
 });
-
-function makeUpdateBudgetItemDto(
-  request: Partial<UpdateBudgetItemDto>,
-): UpdateBudgetItemDto {
-  return {
-    cost: request.cost ?? new Decimal('25.00'),
-    name: request.name ?? `Item`,
-    description: request.description ?? `description`,
-    category: Category.BlackTax,
-    budgetId: request.budgetId ?? v4(),
-  };
-}
-
-function makeItems(numberOfRequests: number): Item[] {
-  const items: Item[] = [];
-  for (let index = 0; index < numberOfRequests; index++) {
-    items.push({
-      cost: new Decimal(index.toString()).add(new Decimal('0.5')),
-      name: `Item_${index + 1}`,
-      description: `description`,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      id: v4(),
-    } as Item);
-  }
-
-  return items;
-}
-
-function makeItem(request: Partial<CreateBudgetItemDto>): Item {
-  return {
-    cost: request.cost ?? new Decimal('25.00'),
-    name: request.name ?? `Item`,
-    description: request.description ?? `description`,
-    category: Category.BlackTax,
-    id: v4(),
-    createdAt: new Date(),
-    budgetId: request.budgetId ?? v4(),
-  } as Item;
-}
-
-function makeCreateItemDto(
-  request: Partial<CreateBudgetItemDto>,
-): CreateBudgetItemDto {
-  return {
-    budgetId: request.budgetId ?? v4(),
-    cost: request.cost ?? new Decimal('25.00'),
-    name: request.name ?? `Item`,
-    description: request.description ?? `description`,
-    category: Category.BlackTax,
-  };
-}
