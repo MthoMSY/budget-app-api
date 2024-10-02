@@ -36,10 +36,10 @@ export class BudgetService {
   }
 
   async delete(id: string, user: User): Promise<Budget> {
-    const Budget = await this.budgetRepository.deleteBudget(id, user);
+    const budget = await this.budgetRepository.deleteBudget(id, user);
 
-    if (Budget) {
-      return Budget;
+    if (budget) {
+      return budget;
     }
 
     this.logger.debug(`Delete budget unsuccessful, id '${id}' does not exist`);
